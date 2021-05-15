@@ -1,40 +1,26 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getAccount = /* GraphQL */ `
-  query GetAccount($id: ID!) {
-    getAccount(id: $id) {
-      id
-      first_name
-      last_name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listAccounts = /* GraphQL */ `
-  query ListAccounts(
-    $filter: ModelAccountFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAccounts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        first_name
-        last_name
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getTransaction = /* GraphQL */ `
   query GetTransaction($id: ID!) {
     getTransaction(id: $id) {
       id
       type
+      currency
+      amount
+      source_info {
+        account_id
+        first_name
+        last_name
+      }
+      destination_info {
+        account_id
+        first_name
+        last_name
+      }
+      swift_code
+      beneficiary_bank
+      purpose_of_transfer
       createdAt
       updatedAt
     }
@@ -50,6 +36,11 @@ export const listTransactions = /* GraphQL */ `
       items {
         id
         type
+        currency
+        amount
+        swift_code
+        beneficiary_bank
+        purpose_of_transfer
         createdAt
         updatedAt
       }

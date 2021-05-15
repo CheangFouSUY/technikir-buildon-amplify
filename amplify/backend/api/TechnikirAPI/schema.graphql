@@ -1,10 +1,17 @@
-type Account @model {
-  id: ID!
-  first_name: String!
-  last_name: String!
-}
-
 type Transaction @model {
   id: ID!
   type: String!
+  currency: String!
+  amount: Float!
+  source_info: [Account]
+  destination_info: [Account]
+  swift_code: Int
+  beneficiary_bank: String
+  purpose_of_transfer: String
+}
+
+type Account {
+  account_id: Int!
+  first_name: String!
+  last_name: String!
 }

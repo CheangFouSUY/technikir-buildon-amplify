@@ -1,44 +1,26 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateAccount = /* GraphQL */ `
-  subscription OnCreateAccount {
-    onCreateAccount {
-      id
-      first_name
-      last_name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAccount = /* GraphQL */ `
-  subscription OnUpdateAccount {
-    onUpdateAccount {
-      id
-      first_name
-      last_name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAccount = /* GraphQL */ `
-  subscription OnDeleteAccount {
-    onDeleteAccount {
-      id
-      first_name
-      last_name
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateTransaction = /* GraphQL */ `
   subscription OnCreateTransaction {
     onCreateTransaction {
       id
       type
+      currency
+      amount
+      source_info {
+        account_id
+        first_name
+        last_name
+      }
+      destination_info {
+        account_id
+        first_name
+        last_name
+      }
+      swift_code
+      beneficiary_bank
+      purpose_of_transfer
       createdAt
       updatedAt
     }
@@ -49,6 +31,21 @@ export const onUpdateTransaction = /* GraphQL */ `
     onUpdateTransaction {
       id
       type
+      currency
+      amount
+      source_info {
+        account_id
+        first_name
+        last_name
+      }
+      destination_info {
+        account_id
+        first_name
+        last_name
+      }
+      swift_code
+      beneficiary_bank
+      purpose_of_transfer
       createdAt
       updatedAt
     }
@@ -59,6 +56,21 @@ export const onDeleteTransaction = /* GraphQL */ `
     onDeleteTransaction {
       id
       type
+      currency
+      amount
+      source_info {
+        account_id
+        first_name
+        last_name
+      }
+      destination_info {
+        account_id
+        first_name
+        last_name
+      }
+      swift_code
+      beneficiary_bank
+      purpose_of_transfer
       createdAt
       updatedAt
     }

@@ -1,48 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createAccount = /* GraphQL */ `
-  mutation CreateAccount(
-    $input: CreateAccountInput!
-    $condition: ModelAccountConditionInput
-  ) {
-    createAccount(input: $input, condition: $condition) {
-      id
-      first_name
-      last_name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateAccount = /* GraphQL */ `
-  mutation UpdateAccount(
-    $input: UpdateAccountInput!
-    $condition: ModelAccountConditionInput
-  ) {
-    updateAccount(input: $input, condition: $condition) {
-      id
-      first_name
-      last_name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAccount = /* GraphQL */ `
-  mutation DeleteAccount(
-    $input: DeleteAccountInput!
-    $condition: ModelAccountConditionInput
-  ) {
-    deleteAccount(input: $input, condition: $condition) {
-      id
-      first_name
-      last_name
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createTransaction = /* GraphQL */ `
   mutation CreateTransaction(
     $input: CreateTransactionInput!
@@ -51,6 +9,21 @@ export const createTransaction = /* GraphQL */ `
     createTransaction(input: $input, condition: $condition) {
       id
       type
+      currency
+      amount
+      source_info {
+        account_id
+        first_name
+        last_name
+      }
+      destination_info {
+        account_id
+        first_name
+        last_name
+      }
+      swift_code
+      beneficiary_bank
+      purpose_of_transfer
       createdAt
       updatedAt
     }
@@ -64,6 +37,21 @@ export const updateTransaction = /* GraphQL */ `
     updateTransaction(input: $input, condition: $condition) {
       id
       type
+      currency
+      amount
+      source_info {
+        account_id
+        first_name
+        last_name
+      }
+      destination_info {
+        account_id
+        first_name
+        last_name
+      }
+      swift_code
+      beneficiary_bank
+      purpose_of_transfer
       createdAt
       updatedAt
     }
@@ -77,6 +65,21 @@ export const deleteTransaction = /* GraphQL */ `
     deleteTransaction(input: $input, condition: $condition) {
       id
       type
+      currency
+      amount
+      source_info {
+        account_id
+        first_name
+        last_name
+      }
+      destination_info {
+        account_id
+        first_name
+        last_name
+      }
+      swift_code
+      beneficiary_bank
+      purpose_of_transfer
       createdAt
       updatedAt
     }
