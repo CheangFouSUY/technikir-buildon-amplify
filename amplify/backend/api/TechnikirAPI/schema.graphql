@@ -1,0 +1,10 @@
+type Account @model {
+  id: ID!
+  first_name: String!
+  last_name: String!
+}
+
+type Transaction @model {
+  id: ID!
+  type: String!
+}
