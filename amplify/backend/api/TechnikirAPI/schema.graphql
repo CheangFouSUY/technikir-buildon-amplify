@@ -1,17 +1,55 @@
-type Transaction @model {
+type DestinationAcc @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  first_name: String!
+  last_name: String!
+  acc_num: Int!
+  DestinationAccTransactions: [DestinationAccTransaction]
+    @connection(keyName: "byDestinationAcc", fields: ["id"])
+}
+
+type TransactionType @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  transac_type_id: String
+  transac_type_name: String
+  Transactions: [Transaction]
+    @connection(keyName: "byTransactionType", fields: ["id"])
+}
+
+type SourceAcc @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  first_name: String!
+  last_name: String!
+  Transactions: [Transaction]
+    @connection(keyName: "bySourceAcc", fields: ["id"])
+  acc_num: Int!
+}
+
+type Transaction
+  @model
+  @auth(rules: [{ allow: public }])
+  @key(name: "bySourceAcc", fields: ["sourceaccountID"])
+  @key(name: "byTransactionType", fields: ["transactiontypeID"]) {
   id: ID!
   type: String!
   currency: String!
   amount: Float!
-  source_info: [Account]
-  destination_info: [Account]
-  swift_code: Int
+  swift_code: String
   beneficiary_bank: String
   purpose_of_transfer: String
+  sourceaccountID: ID
+  transactiontypeID: ID
+  destinationaccs: [DestinationAccTransaction]
+    @connection(keyName: "byTransaction", fields: ["id"])
 }
 
-type Account {
-  account_id: Int!
-  first_name: String!
-  last_name: String!
+type DestinationAccTransaction
+  @model(queries: null)
+  @key(name: "byDestinationAcc", fields: ["destinationaccID", "transactionID"])
+  @key(name: "byTransaction", fields: ["transactionID", "destinationaccID"])
+  @auth(rules: [{ allow: public }, { allow: public }]) {
+  id: ID!
+  destinationaccID: ID!
+  transactionID: ID!
+  destinationacc: DestinationAcc! @connection(fields: ["destinationaccID"])
+  transaction: Transaction! @connection(fields: ["transactionID"])
 }

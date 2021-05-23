@@ -10,6 +10,17 @@
       "StackName": "amplify-technikirbuildon-dev-170736",
       "StackId": "arn:aws:cloudformation:ap-southeast-1:522863296908:stack/amplify-technikirbuildon-dev-170736/62560120-b565-11eb-b280-06b1f00f8c64",
       "AmplifyAppId": "d2r3ghuxtqh7u0"
+    },
+    "categories": {
+      "auth": {
+        "technikirbuildon8eb7e73a": {}
+      },
+      "function": {
+        "S3Trigger50c2ea7a": {
+          "deploymentBucketName": "amplify-technikirbuildon-dev-170736-deployment",
+          "s3Key": "amplify-builds/S3Trigger50c2ea7a-2f56594e303375646f4e-build.zip"
+        }
+      }
     }
   }
 }
