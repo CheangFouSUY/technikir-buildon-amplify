@@ -1,34 +1,27 @@
-type DestinationAcc @model @auth(rules: [{ allow: public }]) {
+type DestinationAcc @model @auth(rules: [{allow: private}]) {
   id: ID!
   first_name: String!
   last_name: String!
   acc_num: Int!
-  DestinationAccTransactions: [DestinationAccTransaction]
-    @connection(keyName: "byDestinationAcc", fields: ["id"])
+  DestinationAccTransactions: [DestinationAccTransaction] @connection(keyName: "byDestinationAcc", fields: ["id"])
 }
 
-type TransactionType @model @auth(rules: [{ allow: public }]) {
+type TransactionType @model @auth(rules: [{allow: private}]) {
   id: ID!
   transac_type_id: String
   transac_type_name: String
-  Transactions: [Transaction]
-    @connection(keyName: "byTransactionType", fields: ["id"])
+  Transactions: [Transaction] @connection(keyName: "byTransactionType", fields: ["id"])
 }
 
-type SourceAcc @model @auth(rules: [{ allow: public }]) {
+type SourceAcc @model @auth(rules: [{allow: private}]) {
   id: ID!
   first_name: String!
   last_name: String!
-  Transactions: [Transaction]
-    @connection(keyName: "bySourceAcc", fields: ["id"])
+  Transactions: [Transaction] @connection(keyName: "bySourceAcc", fields: ["id"])
   acc_num: Int!
 }
 
-type Transaction
-  @model
-  @auth(rules: [{ allow: public }])
-  @key(name: "bySourceAcc", fields: ["sourceaccountID"])
-  @key(name: "byTransactionType", fields: ["transactiontypeID"]) {
+type Transaction @model @key(name: "bySourceAcc", fields: ["sourceaccountID"]) @key(name: "byTransactionType", fields: ["transactiontypeID"]) @auth(rules: [{allow: private}]) {
   id: ID!
   type: String!
   currency: String!
@@ -38,18 +31,14 @@ type Transaction
   purpose_of_transfer: String
   sourceaccountID: ID
   transactiontypeID: ID
-  destinationaccs: [DestinationAccTransaction]
-    @connection(keyName: "byTransaction", fields: ["id"])
+  destinationaccs: [DestinationAccTransaction] @connection(keyName: "byTransaction", fields: ["id"])
 }
 
-type DestinationAccTransaction
-  @model(queries: null)
-  @key(name: "byDestinationAcc", fields: ["destinationaccID", "transactionID"])
-  @key(name: "byTransaction", fields: ["transactionID", "destinationaccID"])
-  @auth(rules: [{ allow: public }, { allow: public }]) {
+type DestinationAccTransaction @model(queries: null) @key(name: "byDestinationAcc", fields: ["destinationaccID", "transactionID"]) @key(name: "byTransaction", fields: ["transactionID", "destinationaccID"]) @auth(rules: [{allow: groups, groups: ["Super_Admin"]}, {allow: groups, groups: ["Super_Admin"]}]) {
   id: ID!
   destinationaccID: ID!
   transactionID: ID!
   destinationacc: DestinationAcc! @connection(fields: ["destinationaccID"])
   transaction: Transaction! @connection(fields: ["transactionID"])
 }
+ 

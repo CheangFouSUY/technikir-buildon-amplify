@@ -1,5 +1,11 @@
 {
   "AppSyncApiName": "TechnikirAPI",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authtechnikirbuildon8eb7e73a",
+      "Outputs.UserPoolId"
+    ]
+  }
 }

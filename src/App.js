@@ -103,7 +103,7 @@ function App() {
     // add UI with event handlers to manage user input
     return (
       <div>
-        <Greetings/>
+        <AmplifySignOut/> 
         <input 
           name = 'type'
           onChange = {onChange}
