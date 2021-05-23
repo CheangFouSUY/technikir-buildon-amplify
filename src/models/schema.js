@@ -198,7 +198,11 @@ export const schema = {
                 "swift_code": {
                     "name": "swift_code",
                     "isArray": false,
+<<<<<<< HEAD
                     "type": "String",
+=======
+                    "type": "ID",
+>>>>>>> a7d3a504c343dc86470507e4f46834a97227af5b
                     "isRequired": false,
                     "attributes": []
                 },
@@ -426,5 +430,9 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
+<<<<<<< HEAD
     "version": "8c09f13bcd2b816963227319c55f9c16"
+=======
+    "version": "fe75d79448f0a68a6f7f6b84a963b263"
+>>>>>>> a7d3a504c343dc86470507e4f46834a97227af5b
 };

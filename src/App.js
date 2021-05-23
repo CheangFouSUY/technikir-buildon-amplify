@@ -1,114 +1,151 @@
 // import the useState and useEffect hooks from React
-import { useState, useEffect } from 'react'
+import { useEffect, useReducer } from 'react';
+import { API, graphqlOperation } from 'aws-amplify';
 
-// import the API category from Amplify library
-import { API } from 'aws-amplify'
+// import uuid for creating unique ID
+import { v4 as uuidv4 } from 'uuid';
 
-// import the Auth component
-import { Auth } from 'aws-amplify'
+// import mutation and query
+import { createSourceAcc as CreateSourceAcc, createDestinationAcc as CreateDestinationAcc, createTransaction as CreateTransaction  } from './graphql/mutations';
+import { listSourceAccs as ListSourceAccs, listDestinationAccs as ListDestinationAccs, listTransactions as ListTransactions, getDestinationAcc } from './graphql/queries';
 
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+const CLIENT_ID = uuidv4();
 
-// import the GraphQL query (created by the CLI)
-import { listTransactions } from './graphql/queries'
+// create initial state
+const initialState = {
+  type: '',
+  currency: '',
+  amount: '',
+  swift_code: '',
+  beneficiary_bank: '',
+  purpose_of_transfer: '',
+  sourceaccountID: '',
+  transactiontypeID: '',
+  transactions: []
+};
 
-// import GraphQL mutation
-import { createTransaction } from './graphql/mutations'
-
-function App() {
-  // define some state to hold the data returned from the API
-  const [transactions, setTransactions] = useState([])
-
-  // create form state
-  const [formState, setFormState] = useState({ type: '', currency: '', amount: ''})
-
-
-  useEffect(() => {
-    // create and invoke a function to fetch the data from the API
-    fetchTransactions()
-    async function fetchTransactions() {
-      try {
-        const transactions = await API.graphql({
-          query: listTransactions
-        })
-        console.log('pets:', transactions)
-        setTransactions(transactions.data.listTransactions.items)
-      } catch (err) {
-        console.log('error fetching transaction...', err)
-      }
-    }
-  }, [])
-
-  function onChange(event) {
-    setFormState({
-      ...formState, [event.target.type] :event.target.amount
-    })
+// create reducer to update state
+function reducer (state, action) {  
+  switch(action.type) {
+    case "SET_TRANSACTIONS":
+      return { ...state, transactions: action.transactions }
+    case "SET_INPUT":
+      return {...state, [action.key]: action.value };
+    case "CLEAR_INPUT":
+      return { ...initialState, transactions: state.transactions };
+    default:
+      return state;
   }
-
-
-  // Class method to sign up a user
-  // async function signUp() {
-  //   const { username, password, email, phone_number } = formState
-  //   try {
-  //     await Auth.signUp({ username, password, attributes: { email, phone_number }})
-  //   } catch (err) {
-  //     console.log('error signing up user...', err)
-  //   }
-  // }
-  
-  // create a function that updates the API as well as the form state
-  async function createTransactionMutation() {
-    const { type, amount } = formState
-    if (type === '') return
-    let transaction = { type }
-    if (amount !== '') {
-      transaction = { ...transaction, amount }
-    }
-    const updatedTransactionArray = [...transactions, transaction]
-    setTransactions(updatedTransactionArray)
-    try {
-      await API.graphql({
-        query: createTransaction,
-        variables: { input: transaction }
-      })
-      console.log('item created!')
-    } catch (err) {
-      console.log('error creating transaction...', err)
-    }
-  }
-
-
-
-
-  return (
-    <div className="App">
-      <h1>My Bank App</h1>
-      <input
-        name='type'
-        placeholder='type'
-        onChange={onChange}
-        value={formState.type}
-      />
-      <input
-        name='amount'
-        placeholder='amount'
-        onChange={onChange}
-        value={formState.amount}
-      />
-      <button onClick={createTransactionMutation}>Create Transaction</button>
-      {
-        transactions.map((transaction, index) => (
-          <div key={index}>
-            <h3>{transaction.type}</h3>
-            <p>{transaction.amount}</p>
-          </div>
-        ))
-      }
-      {/* <AmplifySignOut /> */}
-    </div>
-  );
 }
 
-export default App
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-// export default withAuthenticator(App)
+  // component did mount
+  useEffect(() => {
+    getData()
+  }, []);
+
+  async function getData() {
+    try {
+      const transactionData = await API.graphql(graphqlOperation(ListTransactions));
+      console.log("data from API: ", transactionData);
+      dispatch({ type: 'SET_TRANSACTIONS', transactions: transactionData.data.listTransactions.items});
+    } catch (err) {
+      console.log("error fetching data...", err);
+    }
+  }
+
+  async function createTransaction() {
+    const { type, currency, amount, swift_code, beneficiary_bank, purpose_of_transfer, sourceaccountID } = state;
+
+    if (type === '' || currency === '' || amount === '' || swift_code === '' || beneficiary_bank === '' || purpose_of_transfer === '' || sourceaccountID === '') return 
+  
+    const transaction = { type, currency, amount, swift_code, beneficiary_bank, purpose_of_transfer, sourceaccountID, transactiontypeID: CLIENT_ID, id: CLIENT_ID };
+    const transactions = [ ...state.transactions, transaction ];
+    dispatch({ type: "SET_TRANSACTIONS", transactions });
+    dispatch({ type: "CLEAR_INPUT" });
+    console.log("in createTransaction function:", transactions);
+
+    try {
+      await API.graphql(graphqlOperation(CreateTransaction, { input: transaction}));
+      console.log("item created! Transactions", transactions);
+      console.log("item created! Transaction", transaction);
+    } catch (err) {
+      console.log("error creating transaction...", err);
+    }
+  }
+
+  // change state then user types into input
+  function onChange(e) {
+    dispatch({ type: "SET_INPUT", key: e.target.name, value: e.target.value });
+  }
+
+    // add UI with event handlers to manage user input
+    return (
+      <div>
+        <input 
+          name = 'type'
+          onChange = {onChange}
+          value = {state.type}
+          placeholder = 'type'
+        /> <br/>
+        <input 
+          name = 'currency'
+          onChange = {onChange}
+          value = {state.currency}
+          placeholder = 'currency'
+        /> <br/>
+        <input 
+          name = 'amount'
+          onChange = {onChange}
+          value = {state.amount}
+          placeholder = 'amount'
+        /> <br/>
+        <input 
+          name = 'swift_code'
+          onChange = {onChange}
+          value = {state.swift_code}
+          placeholder = 'swift_code'
+        /> <br/>
+        <input 
+          name = 'beneficiary_bank'
+          onChange = {onChange}
+          value = {state.beneficiary_bank}
+          placeholder = 'beneficiary_bank'
+        /> <br/>
+        <input 
+          name = 'purpose_of_transfer'
+          onChange = {onChange}
+          value = {state.purpose_of_transfer}
+          placeholder = 'purpose_of_transfer'
+        /> <br/>
+        <input 
+          name = 'sourceaccountID'
+          onChange = {onChange}
+          value = {state.sourceaccountID}
+          placeholder = 'sourceaccountID'
+        /> <br/>
+        <button onClick = { createTransaction } > Create Transaction </button>
+        <div>
+          {console.log("state:", state)}
+          {
+            state.transactions.map((transaction) => (
+              <div key = {transaction.id}>
+                <h1>TransactionID: {transaction.transactiontypeID}</h1>
+                <h3>Type: {transaction.type}</h3>
+                <h3>Currency: {transaction.currency}</h3>
+                <h3>Amount: {transaction.amount}</h3>
+                <h3>Swift Code: {transaction.swift_code}</h3>
+                <h3>Beneficiary Bank: {transaction.beneficiary_bank}</h3>
+                <h3>Purpose of Transfer: {transaction.purpose_of_transfer}</h3>
+                <h3>Source Account ID: {transaction.sourceaccountID}</h3><br/>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    )
+}
+
+export default App;
