@@ -14,8 +14,12 @@
     "aws-amplify-react": "^5.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+<<<<<<< HEAD
     "react-minimal-side-navigation": "^1.8.0",
     "react-pro-sidebar": "^0.6.0",
+=======
+    "react-router-dom": "^5.2.0",
+>>>>>>> 4370cb61d743e82ecbc3e771068b59a872b1b3dc
     "react-scripts": "4.0.3",
     "styled-components": "^5.3.0",
     "uuid": "^8.3.2",
