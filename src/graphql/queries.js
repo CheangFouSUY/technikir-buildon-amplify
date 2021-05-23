@@ -8,14 +8,10 @@ export const getDestinationAcc = /* GraphQL */ `
       first_name
       last_name
       acc_num
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       DestinationAccTransactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -32,43 +28,10 @@ export const listDestinationAccs = /* GraphQL */ `
         first_name
         last_name
         acc_num
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncDestinationAccs = /* GraphQL */ `
-  query SyncDestinationAccs(
-    $filter: ModelDestinationAccFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncDestinationAccs(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        first_name
-        last_name
-        acc_num
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -78,14 +41,10 @@ export const getTransactionType = /* GraphQL */ `
       id
       transac_type_id
       transac_type_name
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       Transactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -105,42 +64,10 @@ export const listTransactionTypes = /* GraphQL */ `
         id
         transac_type_id
         transac_type_name
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncTransactionTypes = /* GraphQL */ `
-  query SyncTransactionTypes(
-    $filter: ModelTransactionTypeFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncTransactionTypes(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        transac_type_id
-        transac_type_name
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -151,14 +78,10 @@ export const getSourceAcc = /* GraphQL */ `
       first_name
       last_name
       acc_num
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       Transactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -175,43 +98,10 @@ export const listSourceAccs = /* GraphQL */ `
         first_name
         last_name
         acc_num
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncSourceAccs = /* GraphQL */ `
-  query SyncSourceAccs(
-    $filter: ModelSourceAccFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncSourceAccs(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        first_name
-        last_name
-        acc_num
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -227,14 +117,10 @@ export const getTransaction = /* GraphQL */ `
       purpose_of_transfer
       sourceaccountID
       transactiontypeID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       destinationaccs {
         nextToken
-        startedAt
       }
     }
   }
@@ -256,76 +142,10 @@ export const listTransactions = /* GraphQL */ `
         purpose_of_transfer
         sourceaccountID
         transactiontypeID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncTransactions = /* GraphQL */ `
-  query SyncTransactions(
-    $filter: ModelTransactionFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncTransactions(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        type
-        currency
-        amount
-        swift_code
-        beneficiary_bank
-        purpose_of_transfer
-        sourceaccountID
-        transactiontypeID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const syncDestinationAccTransactions = /* GraphQL */ `
-  query SyncDestinationAccTransactions(
-    $filter: ModelDestinationAccTransactionFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncDestinationAccTransactions(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        destinationaccID
-        transactionID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;

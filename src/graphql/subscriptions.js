@@ -8,14 +8,10 @@ export const onCreateDestinationAcc = /* GraphQL */ `
       first_name
       last_name
       acc_num
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       DestinationAccTransactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -27,14 +23,10 @@ export const onUpdateDestinationAcc = /* GraphQL */ `
       first_name
       last_name
       acc_num
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       DestinationAccTransactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -46,14 +38,10 @@ export const onDeleteDestinationAcc = /* GraphQL */ `
       first_name
       last_name
       acc_num
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       DestinationAccTransactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -64,14 +52,10 @@ export const onCreateTransactionType = /* GraphQL */ `
       id
       transac_type_id
       transac_type_name
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       Transactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -82,14 +66,10 @@ export const onUpdateTransactionType = /* GraphQL */ `
       id
       transac_type_id
       transac_type_name
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       Transactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -100,14 +80,10 @@ export const onDeleteTransactionType = /* GraphQL */ `
       id
       transac_type_id
       transac_type_name
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       Transactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -119,14 +95,10 @@ export const onCreateSourceAcc = /* GraphQL */ `
       first_name
       last_name
       acc_num
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       Transactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -138,14 +110,10 @@ export const onUpdateSourceAcc = /* GraphQL */ `
       first_name
       last_name
       acc_num
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       Transactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -157,14 +125,10 @@ export const onDeleteSourceAcc = /* GraphQL */ `
       first_name
       last_name
       acc_num
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       Transactions {
         nextToken
-        startedAt
       }
     }
   }
@@ -181,14 +145,10 @@ export const onCreateTransaction = /* GraphQL */ `
       purpose_of_transfer
       sourceaccountID
       transactiontypeID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       destinationaccs {
         nextToken
-        startedAt
       }
     }
   }
@@ -205,14 +165,10 @@ export const onUpdateTransaction = /* GraphQL */ `
       purpose_of_transfer
       sourceaccountID
       transactiontypeID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       destinationaccs {
         nextToken
-        startedAt
       }
     }
   }
@@ -229,14 +185,10 @@ export const onDeleteTransaction = /* GraphQL */ `
       purpose_of_transfer
       sourceaccountID
       transactiontypeID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       destinationaccs {
         nextToken
-        startedAt
       }
     }
   }
@@ -247,9 +199,6 @@ export const onCreateDestinationAccTransaction = /* GraphQL */ `
       id
       destinationaccID
       transactionID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       destinationacc {
@@ -257,9 +206,6 @@ export const onCreateDestinationAccTransaction = /* GraphQL */ `
         first_name
         last_name
         acc_num
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -273,9 +219,6 @@ export const onCreateDestinationAccTransaction = /* GraphQL */ `
         purpose_of_transfer
         sourceaccountID
         transactiontypeID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -288,9 +231,6 @@ export const onUpdateDestinationAccTransaction = /* GraphQL */ `
       id
       destinationaccID
       transactionID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       destinationacc {
@@ -298,9 +238,6 @@ export const onUpdateDestinationAccTransaction = /* GraphQL */ `
         first_name
         last_name
         acc_num
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -314,9 +251,6 @@ export const onUpdateDestinationAccTransaction = /* GraphQL */ `
         purpose_of_transfer
         sourceaccountID
         transactiontypeID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -329,9 +263,6 @@ export const onDeleteDestinationAccTransaction = /* GraphQL */ `
       id
       destinationaccID
       transactionID
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
       destinationacc {
@@ -339,9 +270,6 @@ export const onDeleteDestinationAccTransaction = /* GraphQL */ `
         first_name
         last_name
         acc_num
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -355,9 +283,6 @@ export const onDeleteDestinationAccTransaction = /* GraphQL */ `
         purpose_of_transfer
         sourceaccountID
         transactiontypeID
-        _version
-        _deleted
-        _lastChangedAt
         createdAt
         updatedAt
       }

@@ -1,6 +1,10 @@
-// import the useState and useEffect hooks from React
+
 import { useEffect, useReducer } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { Greetings } from 'aws-amplify-react';
+
 
 // import uuid for creating unique ID
 import { v4 as uuidv4 } from 'uuid';
@@ -9,7 +13,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { createSourceAcc as CreateSourceAcc, createDestinationAcc as CreateDestinationAcc, createTransaction as CreateTransaction  } from './graphql/mutations';
 import { listSourceAccs as ListSourceAccs, listDestinationAccs as ListDestinationAccs, listTransactions as ListTransactions, getDestinationAcc } from './graphql/queries';
 
+// import the subscription
+import { onCreateTransaction as OnCreateTransaction } from './graphql/subscriptions'; 
+
 const CLIENT_ID = uuidv4();
+const TRANSACTION_ID = uuidv4();
 
 // create initial state
 const initialState = {
@@ -33,6 +41,8 @@ function reducer (state, action) {
       return {...state, [action.key]: action.value };
     case "CLEAR_INPUT":
       return { ...initialState, transactions: state.transactions };
+    case "ADD_TRANSACTION":
+      return { ...state, transactions: [...state.transactions, action.transaction]};
     default:
       return state;
   }
@@ -42,8 +52,17 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // component did mount
+  // subscribe in useEffect
   useEffect(() => {
     getData()
+    const subscription = API.graphql(graphqlOperation(OnCreateTransaction)).subscribe({
+      next: (eventData) => {
+        const transaction = eventData.value.data.onCreateTransaction;
+        if (transaction.id === CLIENT_ID) return
+        dispatch({ type: "ADD_TRANSACTION", transaction});
+      }
+    })
+    return () => subscription.unsubscribe();
   }, []);
 
   async function getData() {
@@ -61,7 +80,7 @@ function App() {
 
     if (type === '' || currency === '' || amount === '' || swift_code === '' || beneficiary_bank === '' || purpose_of_transfer === '' || sourceaccountID === '') return 
   
-    const transaction = { type, currency, amount, swift_code, beneficiary_bank, purpose_of_transfer, sourceaccountID, transactiontypeID: CLIENT_ID, id: CLIENT_ID };
+    const transaction = { type, currency, amount, swift_code, beneficiary_bank, purpose_of_transfer, sourceaccountID, transactiontypeID: TRANSACTION_ID, id: CLIENT_ID };
     const transactions = [ ...state.transactions, transaction ];
     dispatch({ type: "SET_TRANSACTIONS", transactions });
     dispatch({ type: "CLEAR_INPUT" });
@@ -84,6 +103,7 @@ function App() {
     // add UI with event handlers to manage user input
     return (
       <div>
+        <Greetings/>
         <input 
           name = 'type'
           onChange = {onChange}
@@ -149,3 +169,4 @@ function App() {
 }
 
 export default App;
+// export default withAuthenticator(App);
