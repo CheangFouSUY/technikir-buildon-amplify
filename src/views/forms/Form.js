@@ -45,26 +45,134 @@ const BasicForms = () => {
       <CCol>
           <CCard>
             <CCardHeader>
-              Basic Form
-              <small> Elements</small>
+            <h3>J Trust Royal Bank Money Transfer Application form</h3>
+              
             </CCardHeader>
             <CCardBody>
               <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel>Static</CLabel>
-                  </CCol>
-                  <CCol xs="12" md="9">
-                    <p className="form-control-static">Username</p>
+                    <CLabel>Applicant Details</CLabel>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="text-input">Text Input</CLabel>
+                    <CLabel htmlFor="text-input">Name</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput id="text-input" name="text-input" placeholder="Text" />
+                    <CInput id="text-input" name="text-input" placeholder="Name" />
+                    <CFormText>Applicant's Name</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">Account Number</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="Account Number" />
+                    <CFormText>Applicant's Account Number</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">Address</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="Address" />
+                    <CFormText>Address</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Beneficiary Details</CLabel>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">Name</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="Name" />
+                    <CFormText>Reciever's Name</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">Address</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="Address" />
+                    <CFormText>Address</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">Account Number</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="Account Number/IBAN" />
+                    <CFormText>Reciever's Account Number/IBAN</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">Bank Name and Address</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="Bank Name and Address" />
                     <CFormText>This is a help text</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">SWIFT/SWIFT code/BIC</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="" />
+                    <CFormText>This is a help text</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">For US (Routing No/Fedwire No/ABA)</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="" />
+                    <CFormText>This is a help text</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">For UK (Sort code)</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="" />
+                    <CFormText>This is a help text</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+
+                  <CCol md="3">
+                    <CLabel htmlFor="text-input">For AUS (BSB) and NZ</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput id="text-input" name="text-input" placeholder="" />
+                    <CFormText>This is a help text</CFormText>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Intermidary Bank (Optional)</CLabel>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Currency and Amount of the Transfer</CLabel>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Purpose of Transfer</CLabel>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
