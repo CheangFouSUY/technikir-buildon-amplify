@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import './scss/style.scss';
 
 const loading = (
@@ -38,4 +39,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withAuthenticator(App);

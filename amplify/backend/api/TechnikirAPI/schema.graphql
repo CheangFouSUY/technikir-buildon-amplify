@@ -1,4 +1,4 @@
-type DestinationAcc @model @auth(rules: [{allow: private}]) {
+type DestinationAcc @model @auth(rules: [{allow: groups, groups: ["Super_Admin"], operations: [read, update, delete, create]}]) {
   id: ID!
   first_name: String!
   last_name: String!
@@ -6,14 +6,14 @@ type DestinationAcc @model @auth(rules: [{allow: private}]) {
   DestinationAccTransactions: [DestinationAccTransaction] @connection(keyName: "byDestinationAcc", fields: ["id"])
 }
 
-type TransactionType @model @auth(rules: [{allow: private}]) {
+type TransactionType @model @auth(rules: [{allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   transac_type_id: String
   transac_type_name: String
   Transactions: [Transaction] @connection(keyName: "byTransactionType", fields: ["id"])
 }
 
-type SourceAcc @model @auth(rules: [{allow: private}]) {
+type SourceAcc @model @auth(rules: [{allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   first_name: String!
   last_name: String!
@@ -21,7 +21,7 @@ type SourceAcc @model @auth(rules: [{allow: private}]) {
   acc_num: Int!
 }
 
-type Transaction @model @key(name: "bySourceAcc", fields: ["sourceaccountID"]) @key(name: "byTransactionType", fields: ["transactiontypeID"]) @auth(rules: [{allow: private}]) {
+type Transaction @model @key(name: "bySourceAcc", fields: ["sourceaccountID"]) @key(name: "byTransactionType", fields: ["transactiontypeID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   type: String!
   currency: String!
@@ -34,7 +34,7 @@ type Transaction @model @key(name: "bySourceAcc", fields: ["sourceaccountID"]) @
   destinationaccs: [DestinationAccTransaction] @connection(keyName: "byTransaction", fields: ["id"])
 }
 
-type DestinationAccTransaction @model(queries: null) @key(name: "byDestinationAcc", fields: ["destinationaccID", "transactionID"]) @key(name: "byTransaction", fields: ["transactionID", "destinationaccID"]) @auth(rules: [{allow: groups, groups: ["Super_Admin"]}, {allow: groups, groups: ["Super_Admin"]}]) {
+type DestinationAccTransaction @model(queries: null) @key(name: "byDestinationAcc", fields: ["destinationaccID", "transactionID"]) @key(name: "byTransaction", fields: ["transactionID", "destinationaccID"]) @auth(rules: [{allow: groups, groups: ["Super_Admin"], operations: [read, update, delete, create]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   destinationaccID: ID!
   transactionID: ID!
