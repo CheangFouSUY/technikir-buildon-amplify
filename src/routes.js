@@ -11,6 +11,10 @@ const BasicForms = React.lazy(() => import('./views/base/forms/BasicForms'));
 
 
 const Forms = React.lazy(() => import('./views/forms/Form'))
+const WithinForms = React.lazy(() => import('./views/forms/WithinForm'))
+const CrossForms = React.lazy(() => import('./views/forms/CrossForm'))
+const CountryForms = React.lazy(() => import('./views/forms/CountryForm'))
+
 
 const Jumbotrons = React.lazy(() => import('./views/base/jumbotrons/Jumbotrons'));
 const ListGroups = React.lazy(() => import('./views/base/list-groups/ListGroups'));
@@ -53,6 +57,10 @@ const routes = [
   { path: '/base/carousels', name: 'Carousel', component: Carousels },
   { path: '/base/collapses', name: 'Collapse', component: Collapses },
   { path: '/base/forms', name: 'Forms', component: Forms },
+  { path: '/base/within', name: 'Forms', component: WithinForms },
+  { path: '/base/cross', name: 'Forms', component: CrossForms },
+  { path: '/base/country', name: 'Forms', component: CountryForms },
+
   { path: '/base/jumbotrons', name: 'Jumbotrons', component: Jumbotrons },
   { path: '/base/list-groups', name: 'List Groups', component: ListGroups },
   { path: '/base/navbars', name: 'Navbars', component: Navbars },
