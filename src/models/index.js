@@ -4,12 +4,9 @@ import { schema } from './schema';
 
 
 
-const { DestinationAcc, DestinationAccTransaction, Transaction, TransactionType, SourceAcc } = initSchema(schema);
+const { Account, Transaction } = initSchema(schema);
 
 export {
-  DestinationAcc,
-  DestinationAccTransaction,
-  Transaction,
-  TransactionType,
-  SourceAcc
+  Account,
+  Transaction
 };

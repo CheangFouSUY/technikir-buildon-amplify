@@ -1,7 +1,7 @@
 export const schema = {
     "models": {
-        "DestinationAcc": {
-            "name": "DestinationAcc",
+        "Account": {
+            "name": "Account",
             "fields": {
                 "id": {
                     "name": "id",
@@ -31,23 +31,30 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "DestinationAccTransactions": {
-                    "name": "DestinationAccTransactions",
-                    "isArray": true,
-                    "type": {
-                        "model": "DestinationAccTransaction"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "destinationacc"
-                    }
+                "balance": {
+                    "name": "balance",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "address": {
+                    "name": "address",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "phone_number": {
+                    "name": "phone_number",
+                    "isArray": false,
+                    "type": "AWSPhone",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
-            "pluralName": "DestinationAccs",
+            "pluralName": "Accounts",
             "attributes": [
                 {
                     "type": "model",
@@ -57,115 +64,6 @@ export const schema = {
                     "type": "auth",
                     "properties": {
                         "rules": [
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Super_Admin"
-                                ],
-                                "operations": [
-                                    "read",
-                                    "update",
-                                    "delete",
-                                    "create"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "DestinationAccTransaction": {
-            "name": "DestinationAccTransaction",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "destinationacc": {
-                    "name": "destinationacc",
-                    "isArray": false,
-                    "type": {
-                        "model": "DestinationAcc"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "destinationaccID"
-                    }
-                },
-                "transaction": {
-                    "name": "transaction",
-                    "isArray": false,
-                    "type": {
-                        "model": "Transaction"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "transactionID"
-                    }
-                }
-            },
-            "syncable": true,
-            "pluralName": "DestinationAccTransactions",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {
-                        "queries": null
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byDestinationAcc",
-                        "fields": [
-                            "destinationaccID",
-                            "transactionID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byTransaction",
-                        "fields": [
-                            "transactionID",
-                            "destinationaccID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Super_Admin"
-                                ],
-                                "operations": [
-                                    "read",
-                                    "update",
-                                    "delete",
-                                    "create"
-                                ]
-                            },
-                            {
-                                "allow": "private",
-                                "operations": [
-                                    "read"
-                                ]
-                            },
                             {
                                 "groupClaim": "cognito:groups",
                                 "provider": "userPools",
@@ -237,33 +135,82 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "sourceaccountID": {
-                    "name": "sourceaccountID",
+                "date": {
+                    "name": "date",
                     "isArray": false,
-                    "type": "ID",
+                    "type": "AWSDate",
                     "isRequired": false,
                     "attributes": []
                 },
-                "transactiontypeID": {
-                    "name": "transactiontypeID",
+                "branch_name": {
+                    "name": "branch_name",
                     "isArray": false,
-                    "type": "ID",
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "customer_verified_by": {
+                    "name": "customer_verified_by",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "destinationaccs": {
-                    "name": "destinationaccs",
-                    "isArray": true,
-                    "type": {
-                        "model": "DestinationAccTransaction"
-                    },
+                "register_number": {
+                    "name": "register_number",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "approval": {
+                    "name": "approval",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "transaction"
-                    }
+                    "attributes": []
+                },
+                "checked_by": {
+                    "name": "checked_by",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "uploaded_by": {
+                    "name": "uploaded_by",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "teller_name": {
+                    "name": "teller_name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "source_id": {
+                    "name": "source_id",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "beneficiary_id": {
+                    "name": "beneficiary_id",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "progress": {
+                    "name": "progress",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -272,24 +219,6 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "bySourceAcc",
-                        "fields": [
-                            "sourceaccountID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byTransactionType",
-                        "fields": [
-                            "transactiontypeID"
-                        ]
-                    }
                 },
                 {
                     "type": "auth",
@@ -319,154 +248,9 @@ export const schema = {
                     }
                 }
             ]
-        },
-        "TransactionType": {
-            "name": "TransactionType",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "transac_type_id": {
-                    "name": "transac_type_id",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "transac_type_name": {
-                    "name": "transac_type_name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "Transactions": {
-                    "name": "Transactions",
-                    "isArray": true,
-                    "type": {
-                        "model": "Transaction"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "transactiontypeID"
-                    }
-                }
-            },
-            "syncable": true,
-            "pluralName": "TransactionTypes",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Super_Admin"
-                                ],
-                                "operations": [
-                                    "read",
-                                    "create",
-                                    "update",
-                                    "delete"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "SourceAcc": {
-            "name": "SourceAcc",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "first_name": {
-                    "name": "first_name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "last_name": {
-                    "name": "last_name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "Transactions": {
-                    "name": "Transactions",
-                    "isArray": true,
-                    "type": {
-                        "model": "Transaction"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "sourceaccountID"
-                    }
-                },
-                "acc_num": {
-                    "name": "acc_num",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                }
-            },
-            "syncable": true,
-            "pluralName": "SourceAccs",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Super_Admin"
-                                ],
-                                "operations": [
-                                    "read",
-                                    "create",
-                                    "update",
-                                    "delete"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
         }
     },
     "enums": {},
     "nonModels": {},
-    "version": "8c09f13bcd2b816963227319c55f9c16"
+    "version": "e68b93c264558a9ccdc314a14fc40f8f"
 };

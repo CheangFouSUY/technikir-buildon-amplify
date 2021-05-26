@@ -1,27 +1,14 @@
-type DestinationAcc @model @auth(rules: [{allow: groups, groups: ["Super_Admin"], operations: [read, update, delete, create]}]) {
+type Account @model @auth(rules: [{allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   first_name: String!
   last_name: String!
   acc_num: Int!
-  DestinationAccTransactions: [DestinationAccTransaction] @connection(keyName: "byDestinationAcc", fields: ["id"])
+  balance: Int!
+  address: String!
+  phone_number: AWSPhone!
 }
 
-type TransactionType @model @auth(rules: [{allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
-  id: ID!
-  transac_type_id: String
-  transac_type_name: String
-  Transactions: [Transaction] @connection(keyName: "byTransactionType", fields: ["id"])
-}
-
-type SourceAcc @model @auth(rules: [{allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
-  id: ID!
-  first_name: String!
-  last_name: String!
-  Transactions: [Transaction] @connection(keyName: "bySourceAcc", fields: ["id"])
-  acc_num: Int!
-}
-
-type Transaction @model @key(name: "bySourceAcc", fields: ["sourceaccountID"]) @key(name: "byTransactionType", fields: ["transactiontypeID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
+type Transaction @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   type: String!
   currency: String!
@@ -29,16 +16,16 @@ type Transaction @model @key(name: "bySourceAcc", fields: ["sourceaccountID"]) @
   swift_code: String
   beneficiary_bank: String
   purpose_of_transfer: String
-  sourceaccountID: ID
-  transactiontypeID: ID
-  destinationaccs: [DestinationAccTransaction] @connection(keyName: "byTransaction", fields: ["id"])
-}
-
-type DestinationAccTransaction @model(queries: null) @key(name: "byDestinationAcc", fields: ["destinationaccID", "transactionID"]) @key(name: "byTransaction", fields: ["transactionID", "destinationaccID"]) @auth(rules: [{allow: groups, groups: ["Super_Admin"], operations: [read, update, delete, create]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Super_Admin"], operations: [read, create, update, delete]}]) {
-  id: ID!
-  destinationaccID: ID!
-  transactionID: ID!
-  destinationacc: DestinationAcc! @connection(fields: ["destinationaccID"])
-  transaction: Transaction! @connection(fields: ["transactionID"])
+  date: AWSDate
+  branch_name: String!
+  customer_verified_by: String
+  register_number: Int!
+  approval: String
+  checked_by: String
+  uploaded_by: String
+  teller_name: String
+  source_id: Int!
+  beneficiary_id: Int!
+  progress: String!
 }
  

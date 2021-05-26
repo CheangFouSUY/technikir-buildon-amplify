@@ -4,22 +4,16 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
-export declare class DestinationAcc {
+export declare class Account {
   readonly id: string;
   readonly first_name: string;
   readonly last_name: string;
   readonly acc_num: number;
-  readonly DestinationAccTransactions?: (DestinationAccTransaction | null)[];
-  constructor(init: ModelInit<DestinationAcc>);
-  static copyOf(source: DestinationAcc, mutator: (draft: MutableModel<DestinationAcc>) => MutableModel<DestinationAcc> | void): DestinationAcc;
-}
-
-export declare class DestinationAccTransaction {
-  readonly id: string;
-  readonly destinationacc: DestinationAcc;
-  readonly transaction: Transaction;
-  constructor(init: ModelInit<DestinationAccTransaction>);
-  static copyOf(source: DestinationAccTransaction, mutator: (draft: MutableModel<DestinationAccTransaction>) => MutableModel<DestinationAccTransaction> | void): DestinationAccTransaction;
+  readonly balance: number;
+  readonly address: string;
+  readonly phone_number: string;
+  constructor(init: ModelInit<Account>);
+  static copyOf(source: Account, mutator: (draft: MutableModel<Account>) => MutableModel<Account> | void): Account;
 }
 
 export declare class Transaction {
@@ -30,28 +24,17 @@ export declare class Transaction {
   readonly swift_code?: string;
   readonly beneficiary_bank?: string;
   readonly purpose_of_transfer?: string;
-  readonly sourceaccountID?: string;
-  readonly transactiontypeID?: string;
-  readonly destinationaccs?: (DestinationAccTransaction | null)[];
+  readonly date?: string;
+  readonly branch_name: string;
+  readonly customer_verified_by?: string;
+  readonly register_number: number;
+  readonly approval?: string;
+  readonly checked_by?: string;
+  readonly uploaded_by?: string;
+  readonly teller_name?: string;
+  readonly source_id: number;
+  readonly beneficiary_id: number;
+  readonly progress: string;
   constructor(init: ModelInit<Transaction>);
   static copyOf(source: Transaction, mutator: (draft: MutableModel<Transaction>) => MutableModel<Transaction> | void): Transaction;
-}
-
-export declare class TransactionType {
-  readonly id: string;
-  readonly transac_type_id?: string;
-  readonly transac_type_name?: string;
-  readonly Transactions?: (Transaction | null)[];
-  constructor(init: ModelInit<TransactionType>);
-  static copyOf(source: TransactionType, mutator: (draft: MutableModel<TransactionType>) => MutableModel<TransactionType> | void): TransactionType;
-}
-
-export declare class SourceAcc {
-  readonly id: string;
-  readonly first_name: string;
-  readonly last_name: string;
-  readonly Transactions?: (Transaction | null)[];
-  readonly acc_num: number;
-  constructor(init: ModelInit<SourceAcc>);
-  static copyOf(source: SourceAcc, mutator: (draft: MutableModel<SourceAcc>) => MutableModel<SourceAcc> | void): SourceAcc;
 }

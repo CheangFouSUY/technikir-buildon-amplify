@@ -1,7 +1,8 @@
-import { useState, useReducer } from 'react';
+import { useState, useReducer, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { v4 as uuidv4 } from 'uuid';
 import { createTransaction as CreateTransaction  } from '../../graphql/mutations';
+import { listTransactions as ListTransaction, listAccounts as ListAccount } from '../../graphql/queries';
 import { onCreateTransaction as OnCreateTransaction } from '../../graphql/subscriptions'; 
 import {
   CButton,
@@ -31,22 +32,35 @@ const TRANSACTION_ID = uuidv4();
 
 // create initial state
 const initialState = {
-  type: '',
+  source_id: '',
+  source_name: '',
+  source_phone: '',
+  source_address: '',
+  beneficiary_id: '',
+  beneficiary_name: '',
+  beneficiary_address: '',
   currency: '',
   amount: '',
-  swift_code: '',
-  beneficiary_bank: '',
+  date: '',
   purpose_of_transfer: '',
-  sourceaccountID: '',
-  transactiontypeID: '',
-  transactions: []
-};
+  branch_name: '',
+  customer_verified_by: '',
+  register_number: '',
+  approval: '',
+  checked_by: '',
+  uploaded_by: '',
+  teller_name: '',
+  transactions: [],
+  accounts: []
+}
 
 // create reducer to update state
 function reducer (state, action) {  
   switch(action.type) {
     case "SET_TRANSACTIONS":
       return { ...state, transactions: action.transactions }
+    case "SET_ACCOUNTS":
+      return { ...state, accounts: action.accounts }
     case "SET_INPUT":
       return {...state, [action.key]: action.value };
     case "CLEAR_INPUT":
@@ -60,16 +74,36 @@ function reducer (state, action) {
 
 
 const PaymentInstructionForm = () => {
-  const [collapsed, setCollapsed] = useState(true);
-  const [showElements, setShowElements] = useState(true);
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    getData()
+    const subscription = API.graphql(graphqlOperation(OnCreateTransaction)).subscribe({
+      next: (eventData) => {
+        const transaction = eventData.value.data.onCreateTransaction;
+        if (transaction.id === CLIENT_ID) return
+        dispatch({ type: "ADD_TRANSACTION", transaction});
+      }
+    })
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // get the data of accounts
+  async function getData() {
+    try {
+      const accountData = await API.graphql(graphqlOperation(ListAccount));
+      console.log("data from API: ", accountData);
+      dispatch({ type: 'SET_ACCOUNTS', accounts: accountData.data.listAccounts.items});
+    } catch (err) {
+      console.log("error fetching data...", err);
+    }
+  }
   
   async function createTransaction() {
-    const { type, currency, amount, swift_code, beneficiary_bank, purpose_of_transfer, sourceaccountID } = state;
+    const {  source_id, beneficiary_id, currency, amount, date, purpose_of_transfer, branch_name, customer_verified_by, register_number, approval, checked_by, uploaded_by, teller_name } = state;
 
-    if (currency === '' || amount === '' || swift_code === '' || beneficiary_bank === '' ) return 
-  
-    const transaction = { type: "none", currency, amount, swift_code, beneficiary_bank, purpose_of_transfer: "none", sourceaccountID, transactiontypeID: TRANSACTION_ID, id: CLIENT_ID };
+    if (source_id === '' || beneficiary_id === '' || currency === '' || amount === '' || date === '' || purpose_of_transfer === '' || branch_name === '' || customer_verified_by === '' || register_number === '' || approval === '' || checked_by === '' || uploaded_by === '' || teller_name  ) return 
+    const transaction = { id: CLIENT_ID, type: "Within Bank", swift_code: "None", beneficiary_bank: "JTrust", source_id, beneficiary_id, currency, amount, date, purpose_of_transfer, branch_name, customer_verified_by, register_number, approval, checked_by, uploaded_by, teller_name}
     const transactions = [ ...state.transactions, transaction ];
     dispatch({ type: "SET_TRANSACTIONS", transactions });
     dispatch({ type: "CLEAR_INPUT" });
@@ -101,12 +135,13 @@ const PaymentInstructionForm = () => {
             </CCardHeader>
             <CCardBody>
               <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
+                <h4>APPLICANT DETAILS:</h4>
                 <CFormGroup row>
                   <CCol md="3">
                     <CLabel htmlFor="source_id">Source ID</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.sourceaccountID} type="number" id="source_id" name="sourceaccountID" placeholder="ID" />
+                    <CInput onChange={onChange} value={state.source_id} type="number" id="source_id" name="source_id" placeholder="ID" />
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -114,15 +149,32 @@ const PaymentInstructionForm = () => {
                     <CLabel htmlFor="source_name">Source Name</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value="" type="text" id="source_name" name="source_name" placeholder="Name" />
+                    <CInput onChange={onChange} value={state.source_name} type="text" id="source_name" name="source_name" placeholder="Name" />
                   </CCol>
                 </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="source_phone">Source Phone Number</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput onChange={onChange} value={state.source_phone} type="tel" id="source_phone" name="source_phone" placeholder="Phone Number" />
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="source_address">Source Address</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput onChange={onChange} value={state.source_address} type="tel" id="source_address" name="source_address" placeholder="Address" />
+                  </CCol>
+                </CFormGroup>
+                <h4>BENEFICIARY DETAIL:</h4>
                 <CFormGroup row>
                   <CCol md="3">
                     <CLabel htmlFor="beneficiary_id">Beneficiary ID</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value="" type="number" id="beneficiary_id" name="beneficiary_id" placeholder="ID" />
+                    <CInput onChange={onChange} value={state.beneficiary_id} type="number" id="beneficiary_id" name="beneficiary_id" placeholder="ID" />
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -130,25 +182,18 @@ const PaymentInstructionForm = () => {
                     <CLabel htmlFor="beneficiary_name">Beneficiary Name</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value="" type="text" id="beneficiary_name" name="beneficiary_name" placeholder="Name" />
+                    <CInput onChange={onChange} value={state.beneficiary_name} type="text" id="beneficiary_name" name="beneficiary_name" placeholder="Name" />
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="beneficiary_bank">Beneficiary Bank</CLabel>
+                    <CLabel htmlFor="beneficiary_address">Beneficiary Address</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.beneficiary_bank} type="text" id="beneficiary_bank" name="beneficiary_bank" placeholder="Bank" />
+                    <CInput onChange={onChange} value={state.beneficiary_address} type="text" id="beneficiary_address" name="beneficiary_address" placeholder="Name" />
                   </CCol>
                 </CFormGroup>
-                <CFormGroup row>
-                  <CCol md="3">
-                    <CLabel htmlFor="swift-code">SWIFT Code</CLabel>
-                  </CCol>
-                  <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.swift_code} type="text" id="swift-code" name="swift_code" placeholder="Code" />
-                  </CCol>
-                </CFormGroup>
+                <h4>CURRENCY AND AMOUNT OF TRANSFER:</h4>
                 <CFormGroup row>
                   <CCol md="3">
                     <CLabel htmlFor="currency">Currency</CLabel>
@@ -165,49 +210,7 @@ const PaymentInstructionForm = () => {
                     <CInput onChange={onChange} value={state.amount} type="number" id="amount" name="amount" placeholder="Amount" />
                   </CCol>
                 </CFormGroup>
-                <CFormGroup row>
-                  <CCol md="3">
-                    <CLabel htmlFor="branch-name">Branch Name</CLabel>
-                  </CCol>
-                  <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value="" type="text" id="branch-name" name="branch-name" placeholder="Branch Name" />
-                  </CCol>
-                </CFormGroup>
-                <CFormGroup row>
-                  <CCol md="3">
-                    <CLabel htmlFor="approval">Approval</CLabel>
-                  </CCol>
-                  <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value="" type="text" id="approval" name="approval" placeholder="Approval" />
-                  </CCol>
-                </CFormGroup>
-                <CFormGroup row>
-                  <CCol md="3">
-                    <CLabel htmlFor="date">Date</CLabel>
-                  </CCol>
-                  <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value="" type="date" id="date" name="date" placeholder="date" />
-                  </CCol>
-                </CFormGroup>
-                <CFormGroup row>
-                  <CCol md="3">
-                    <CLabel>Payment Method</CLabel>
-                  </CCol>
-                  <CCol md="9">
-                    <CFormGroup variant="custom-radio" inline>
-                      <CInputRadio custom id="within-bank" name="payment-method" value="within-bank" />
-                      <CLabel variant="custom-checkbox" htmlFor="within-bank">Within Bank</CLabel>
-                    </CFormGroup>
-                    <CFormGroup variant="custom-radio" inline>
-                      <CInputRadio custom id="cross-bank" name="payment-method" value="cross-bank" />
-                      <CLabel variant="custom-checkbox" htmlFor="cross-bank">Cross Bank</CLabel>
-                    </CFormGroup>
-                    <CFormGroup variant="custom-radio" inline>
-                      <CInputRadio custom id="cross-country" name="payment-method" value="cross-country" />
-                      <CLabel variant="custom-checkbox" htmlFor="cross-country">Cross Country</CLabel>
-                    </CFormGroup>
-                  </CCol>
-                </CFormGroup>
+                <h4>PURPOSE OF TRANSFER</h4>
                 <CFormGroup row>
                   <CCol md="3"><CLabel>Purpose of Transfer</CLabel></CCol>
                   <CCol md="9">
@@ -227,6 +230,30 @@ const PaymentInstructionForm = () => {
                       <CInputCheckbox id="purpose-others" name="purpose-others" value="for-others" />
                       <CLabel variant="checkbox" className="form-check-label" htmlFor="purpose-others">Others</CLabel>
                     </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="branch_name">Branch Name</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput onChange={onChange} value="" type="text" id="branch_name" name="branch_name" placeholder="Branch Name" />
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="approval">Approval</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput onChange={onChange} value="" type="text" id="approval" name="approval" placeholder="Approval" />
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="date">Date</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput onChange={onChange} value="" type="date" id="date" name="date" placeholder="date" />
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
