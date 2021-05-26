@@ -72,8 +72,9 @@ function reducer (state, action) {
 const WithinForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // component did mount
   useEffect(() => {
-    // getData()
+    getData()
     const subscription = API.graphql(graphqlOperation(OnCreateTransaction)).subscribe({
       next: (eventData) => {
         const transaction = eventData.value.data.onCreateTransaction;
@@ -83,6 +84,8 @@ const WithinForm = () => {
     })
     return () => subscription.unsubscribe();
   }, []);
+
+
 
   // get the data of accounts
   async function getData() {
@@ -114,12 +117,14 @@ const WithinForm = () => {
     }
   }
 
-  // change state then user types into input
   function onChange(e) {
     dispatch({ type: "SET_INPUT", key: e.target.name, value: e.target.value });
   }
 
-
+  function checkID(id) {
+    return state.accounts.findIndex(e => e.acc_num == id);
+  }
+  
   return (
     <>
       <CRow>
@@ -145,15 +150,16 @@ const WithinForm = () => {
                     <CLabel htmlFor="source_firstname">Source First Name</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.source_firstname} type="text" id="source_firstname" name="source_firstname" placeholder="First Name" />
+                    <CInput value={checkID(state.source_id) === -1 ? "" : state.accounts[checkID(state.source_id)].first_name} type="text" id="source_firstname" name="source_firstname" placeholder="First Name" disabled/>
                   </CCol>
+                  {console.log(state.accounts[checkID(state.source_id)])}
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
                     <CLabel htmlFor="source_lastname">Source Last Name</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.source_lastname} type="text" id="source_lastname" name="source_lastname" placeholder="Last Name" />
+                    <CInput value={checkID(state.source_id) === -1 ? "" : state.accounts[checkID(state.source_id)].last_name} type="text" id="source_lastname" name="source_lastname" placeholder="Last Name" disabled/>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -161,7 +167,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="source_phone">Source Phone Number</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.source_phone} type="tel" id="source_phone" name="source_phone" placeholder="Phone Number" />
+                    <CInput value={checkID(state.source_id) === -1 ? "" : state.accounts[checkID(state.source_id)].phone_number} type="tel" id="source_phone" name="source_phone" placeholder="Phone Number" disabled/>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -169,7 +175,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="source_address">Source Address</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.source_address} type="tel" id="source_address" name="source_address" placeholder="Address" />
+                    <CInput value={checkID(state.source_id) === -1 ? "" : state.accounts[checkID(state.source_id)].address} type="text" id="source_address" name="source_address" placeholder="Address" disabled/>
                   </CCol>
                 </CFormGroup>
                 <h4>BENEFICIARY DETAIL:</h4>
@@ -186,7 +192,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="beneficiary_firstname">Beneficiary First Name</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.beneficiary_firstname} type="text" id="beneficiary_firstname" name="beneficiary_firstname" placeholder="First Name" />
+                    <CInput value={checkID(state.beneficiary_id) === -1 ? "" : state.accounts[checkID(state.beneficiary_id)].first_name} type="text" id="beneficiary_firstname" name="beneficiary_firstname" placeholder="First Name" disabled/>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -194,7 +200,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="beneficiary_lastname">Beneficiary Last Name</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.beneficiary_lastname} type="text" id="beneficiary_lastname" name="beneficiary_lastname" placeholder="Last Name" />
+                    <CInput value={checkID(state.beneficiary_id) === -1 ? "" : state.accounts[checkID(state.beneficiary_id)].last_name} type="text" id="beneficiary_lastname" name="beneficiary_lastname" placeholder="Last Name" disabled/>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -202,7 +208,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="beneficiary_address">Beneficiary Address</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.beneficiary_address} type="text" id="beneficiary_address" name="beneficiary_address" placeholder="Address" />
+                    <CInput value={checkID(state.beneficiary_id) === -1 ? "" : state.accounts[checkID(state.beneficiary_id)].address} type="text" id="beneficiary_address" name="beneficiary_address" placeholder="Address" disabled/>
                   </CCol>
                 </CFormGroup>
                 <h4>CURRENCY AND AMOUNT OF TRANSFER:</h4>
