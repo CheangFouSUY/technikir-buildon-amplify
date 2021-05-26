@@ -20,6 +20,10 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import FileBase64 from 'react-file-base64';
+import { func } from 'prop-types';
+
+
 
 const CLIENT_ID = uuidv4();
 
@@ -94,7 +98,6 @@ const WithinForm = () => {
       console.log("error fetching data...", err);
     }
   }
-  
   async function createTransaction() {
     const {  source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name } = state;
 
@@ -317,13 +320,13 @@ const WithinForm = () => {
                 <CFormGroup row>
                   <CLabel col md="3" htmlFor="file-input">File input</CLabel>
                   <CCol xs="12" md="9">
-                    <CInputFile id="file-input" name="file-input"/>
+                    <FileBase64 multiple= {true}></FileBase64>
                   </CCol>
                 </CFormGroup>
               </CForm>
             </CCardBody>
             <CCardFooter>
-              <CButton onClick={ createTransaction } type="submit" size="sm" color="primary"><CIcon name="cil-scrubber" /> Submit</CButton>
+              <CButton onClick={ createTransaction} type="submit" size="sm" color="primary"><CIcon name="cil-scrubber" /> Submit</CButton>
               <CButton type="reset" size="sm" color="danger"><CIcon name="cil-ban" /> Reset</CButton>
             </CCardFooter>
           </CCard>
