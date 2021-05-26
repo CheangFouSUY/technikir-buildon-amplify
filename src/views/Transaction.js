@@ -63,8 +63,15 @@ function reducer (state, action) {
 }  
 
 const WithinForm = (props) => {
-    const transactionDetail = props.locatoin.state || {};
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const transactionDetail = props.location.state || {};
+    const [state, dispatch] = useReducer(reducer, initialState);
+    let beneficiary_bank_type = "display: none !important";
+    let swift_code_type = "display: none !important";
+    if ( transactionDetail.type === "Cross Country" ){
+        beneficiary_bank_type = "";
+        swift_code_type = "";
+    }else if (transactionDetail.type === "Cross Bank")
+        beneficiary_bank_type = "";
 
     useEffect(() => {
         getData();
@@ -73,7 +80,7 @@ const WithinForm = (props) => {
     async function getData() {
         try {
             const accountData = await API.graphql(graphqlOperation(ListAccounts));
-            console.log("data from API: ", accountData);
+            // console.log("data from API: ", accountData);
             dispatch( { type: 'SET_ACCOUNTS', accounts: accountData.data.listAccounts.items});
         } catch (err) {
             console.log("error fetching data...", err);
@@ -87,11 +94,11 @@ const WithinForm = (props) => {
     return (
         <>
         <CRow>
-
+        {console.log(transactionDetail)}
         <CCol>
             <CCard>
                 <CCardHeader>
-                <h3>Payment Instruction Within Bank Form</h3>
+                <h3>Payment Instruction {transactionDetail.type} Form</h3>
                 </CCardHeader>
                 <CCardBody>
                 <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
@@ -101,7 +108,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="source_id">Source ID</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.source_id} type="number" id="source_id" name="source_id" placeholder="ID" />
+                        <CInput value={transactionDetail.source_id} type="number" id="source_id" name="source_id" placeholder="ID" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -111,7 +118,6 @@ const WithinForm = (props) => {
                     <CCol xs="12" md="9">
                         <CInput value={checkID(transactionDetail.source_id) === -1 ? "" : state.accounts[checkID(transactionDetail.source_id)].first_name} type="text" id="source_firstname" name="source_firstname" placeholder="First Name" disabled/>
                     </CCol>
-                    {console.log(state.accounts[checkID(transactionDetail.source_id)])}
                     </CFormGroup>
                     <CFormGroup row>
                     <CCol md="3">
@@ -143,7 +149,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="beneficiary_id">Beneficiary ID</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.beneficiary_id} type="number" id="beneficiary_id" name="beneficiary_id" placeholder="ID" />
+                        <CInput value={transactionDetail.beneficiary_id} type="number" id="beneficiary_id" name="beneficiary_id" placeholder="ID" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -170,13 +176,37 @@ const WithinForm = (props) => {
                         <CInput value={transactionDetail.beneficiary_address} type="text" id="beneficiary_address" name="beneficiary_address" placeholder="Address" disabled/>
                     </CCol>
                     </CFormGroup>
+                    {() => {
+                        if (transactionDetail.type === "Cross Bank" || transactionDetail.type === "Cross Country"){
+                            <CFormGroup row>
+                            <CCol md="3" >
+                                <CLabel htmlFor="beneficiary_bank">Beneficiary Bank</CLabel>
+                            </CCol>
+                            <CCol xs="12" md="9">
+                                <CInput value={transactionDetail.beneficiary_bank} type="text" id="beneficiary_bank" name="beneficiary_bank" placeholder="Beneficiary Bank" disabled/>
+                            </CCol>
+                            </CFormGroup>
+                        }
+                    }}
+                    {() => {
+                        if (transactionDetail.type === "Cross Country"){
+                            <CFormGroup row>
+                            <CCol md="3" >
+                                <CLabel htmlFor="swift_code">SWIFT Code</CLabel>
+                            </CCol>
+                            <CCol xs="12" md="9">
+                                <CInput value={transactionDetail.swift_code} type="text" id="swift_code" name="swift_code" placeholder="Swift Code" disabled/>
+                            </CCol>
+                            </CFormGroup>
+                        }
+                    }}
                     <h4>CURRENCY AND AMOUNT OF TRANSFER:</h4>
                     <CFormGroup row>
                     <CCol md="3">
                         <CLabel htmlFor="currency">Currency</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.currency} type="text" id="currency" name="currency" placeholder="Currency" />
+                        <CInput value={transactionDetail.currency} type="text" id="currency" name="currency" placeholder="Currency" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -184,7 +214,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="amount">Amount</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.amount} type="number" id="amount" name="amount" placeholder="Amount" />
+                        <CInput value={transactionDetail.amount} type="number" id="amount" name="amount" placeholder="Amount" disabled/>
                     </CCol>
                     </CFormGroup>
                     <h4>PURPOSE OF TRANSFER: </h4>
@@ -193,7 +223,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="purpose_of_transfer">Purpose of Transfer</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.purpose_of_transfer} type="number" id="purpose_of_transfer" name="purpose_of_transfer" placeholder="Purpose of Transfer" />
+                        <CInput value={transactionDetail.purpose_of_transfer} type="text" id="purpose_of_transfer" name="purpose_of_transfer" placeholder="Purpose of Transfer" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -201,7 +231,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="date">Date</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.date} type="date" id="date" name="date" placeholder="date" />
+                        <CInput value={transactionDetail.date} type="date" id="date" name="date" placeholder="date" disabled/>
                     </CCol>
                     </CFormGroup>
                     <h4>BANK USE ONLY:</h4>
@@ -210,7 +240,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="branch_name">Branch Name</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.branch_name} type="text" id="branch_name" name="branch_name" placeholder="Branch Name" />
+                        <CInput value={transactionDetail.branch_name} type="text" id="branch_name" name="branch_name" placeholder="Branch Name" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -218,7 +248,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="register_number">Register Number</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.register_number} type="Number" id="register_number" name="register_number" placeholder="Register Number" />
+                        <CInput value={transactionDetail.register_number} type="Number" id="register_number" name="register_number" placeholder="Register Number" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -226,7 +256,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="approval">Approval</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.approval} type="text" id="approval" name="approval" placeholder="Approval" />
+                        <CInput value={transactionDetail.approval} type="text" id="approval" name="approval" placeholder="Approval" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -234,7 +264,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="uploaded_by">Uploaded By</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.uploaded_by} type="text" id="uploaded_by" name="uploaded_by" placeholder="Uploaded By" />
+                        <CInput value={transactionDetail.uploaded_by} type="text" id="uploaded_by" name="uploaded_by" placeholder="Uploaded By" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -242,7 +272,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="checked_by">Checked By</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.checked_by} type="text" id="checked_by" name="checked_by" placeholder="Checked By" />
+                        <CInput value={transactionDetail.checked_by} type="text" id="checked_by" name="checked_by" placeholder="Checked By" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -250,7 +280,7 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="teller_name">Teller Name</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.teller_name} type="text" id="teller_name" name="teller_name" placeholder="Teller Name" />
+                        <CInput value={transactionDetail.teller_name} type="text" id="teller_name" name="teller_name" placeholder="Teller Name" disabled/>
                     </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -258,14 +288,14 @@ const WithinForm = (props) => {
                         <CLabel htmlFor="customer_verified_by">Customer Verified By</CLabel>
                     </CCol>
                     <CCol xs="12" md="9">
-                        <CInput value={transactionDetail.customer_verified_by} type="text" id="customer_verified_by" name="customer_verified_by" placeholder="Verified By" />
+                        <CInput value={transactionDetail.customer_verified_by} type="text" id="customer_verified_by" name="customer_verified_by" placeholder="Verified By" disabled/>
                     </CCol>
                     </CFormGroup>
                 </CForm>
                 </CCardBody>
                 <CCardFooter>
-                <CButton type="submit" size="sm" color="primary"><CIcon name="cil-scrubber" /> Submit</CButton>
-                <CButton type="reset" size="sm" color="danger"><CIcon name="cil-ban" /> Reset</CButton>
+                <CButton type="submit" md="9" size="sm" color="primary"><CIcon name="cil-scrubber" /> Authorize </CButton>
+                <CButton type="submit" md="9" size="sm" color="primary"><CIcon name="cil-scrubber" /> Reject </CButton>
                 </CCardFooter>
             </CCard>
             </CCol>

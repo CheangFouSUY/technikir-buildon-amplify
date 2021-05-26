@@ -31,6 +31,9 @@ const fields = ['register_number','date', 'type', 'progress', { key: 'show_detai
 const initialState = {
     source_id: '',
     beneficiary_id: '',
+    beneficiary_firstname: '',
+    beneficiary_lastname: '',
+    beneficiary_address: '',
     currency: '',
     amount: '',
     date: '',
@@ -85,12 +88,13 @@ const Authorizer = () => {
         try {
             const transactionData = await API.graphql(graphqlOperation(ListTransactions));
             transactionData.data.listTransactions.items.map(divideProgress);
+            console.log("Fetched API:", transactionData);
             dispatch({ type: 'SET_TRANSACTIONS', transactions: transactionData.data.listTransactions.items});
         } catch (err) {
             console.log("error fetching data...", err);
         }
     }
-    
+
     const handleClick = (data) => {
         history.push({
             pathname: '/theme/colors',
@@ -177,7 +181,7 @@ const Authorizer = () => {
                                 variant="outline"
                                 shape="square"
                                 size="sm"
-                                onClick={ () => { history.push('/theme/colors')}}
+                                onClick={ () => handleClick(item) }
                                 >
                                 Show
                                 </CButton>
@@ -222,7 +226,7 @@ const Authorizer = () => {
                                 variant="outline"
                                 shape="square"
                                 size="sm"
-                                onClick={ () => { history.push('/theme/colors')}}
+                                onClick={ () => handleClick(item) }
                                 >
                                 Show
                                 </CButton>
