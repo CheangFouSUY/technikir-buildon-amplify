@@ -73,7 +73,7 @@ const WithinForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    getData()
+    // getData()
     const subscription = API.graphql(graphqlOperation(OnCreateTransaction)).subscribe({
       next: (eventData) => {
         const transaction = eventData.value.data.onCreateTransaction;

@@ -39,6 +39,8 @@ const initialState = {
   amount: '',
   date: '',
   purpose_of_transfer: '',
+  swift_code: '',
+  beneficiary_bank:'',
   branch_name: '',
   customer_verified_by: '',
   register_number: '',
@@ -73,7 +75,7 @@ const WithinForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    getData()
+    // getData()
     const subscription = API.graphql(graphqlOperation(OnCreateTransaction)).subscribe({
       next: (eventData) => {
         const transaction = eventData.value.data.onCreateTransaction;
@@ -96,10 +98,10 @@ const WithinForm = () => {
   }
   
   async function createTransaction() {
-    const {  source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name } = state;
+    const {  source_id, beneficiary_id, currency, amount, date, branch_name, register_number, swift_code, beneficiary_bank, approval, checked_by, uploaded_by, teller_name } = state;
 
-    if (source_id === '' || beneficiary_id === '' || currency === '' || amount === '' || date === '' || branch_name === '' || register_number === '' || approval === '' || checked_by === '' || uploaded_by === '' || teller_name === '' ) return 
-    const transaction = { id: CLIENT_ID, type: "Within Bank", swift_code: "None", beneficiary_bank: "JTrust", progress: "Pending", purpose_of_transfer: "Others", customer_verified_by: "Others", source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name}
+    if (source_id === '' || beneficiary_id === '' || swift_code === '' || beneficiary_bank === '' || currency === '' || amount === '' || date === '' || branch_name === '' || register_number === '' || approval === '' || checked_by === '' || uploaded_by === '' || teller_name === '' ) return; 
+    const transaction = { id: CLIENT_ID, type: "Cross Country", swift_code, beneficiary_bank, progress: "Pending", purpose_of_transfer: "Others", customer_verified_by: "Others", source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name};
     const transactions = [ ...state.transactions, transaction ];
     dispatch({ type: "SET_TRANSACTIONS", transactions });
     dispatch({ type: "CLEAR_INPUT" });
@@ -203,6 +205,22 @@ const WithinForm = () => {
                   </CCol>
                   <CCol xs="12" md="9">
                     <CInput onChange={onChange} value={state.beneficiary_address} type="text" id="beneficiary_address" name="beneficiary_address" placeholder="Address" />
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="beneficiary_bank">Beneficiary Bank</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput onChange={onChange} value={state.beneficiary_bank} type="text" id="beneficiary_bank" name="beneficiary_bank" placeholder="Beneficiary Bank" />
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="swift_code">SWIFT Code</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput onChange={onChange} value={state.swift_code} type="text" id="swift_code" name="swift_code" placeholder="Swift Code" />
                   </CCol>
                 </CFormGroup>
                 <h4>CURRENCY AND AMOUNT OF TRANSFER:</h4>

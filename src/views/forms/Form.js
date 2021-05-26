@@ -1,9 +1,4 @@
-import { useState, useReducer, useEffect } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
-import { v4 as uuidv4 } from 'uuid';
-import { createTransaction as CreateTransaction  } from '../../graphql/mutations';
-import { listTransactions as ListTransaction, listAccounts as ListAccount } from '../../graphql/queries';
-import { onCreateTransaction as OnCreateTransaction } from '../../graphql/subscriptions'; 
+import React from 'react'
 import {
   CButton,
   CCard,
@@ -11,6 +6,11 @@ import {
   CCardFooter,
   CCardHeader,
   CCol,
+  CCollapse,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
+  CFade,
   CForm,
   CFormGroup,
   CFormText,
@@ -21,108 +21,22 @@ import {
   CInputFile,
   CInputCheckbox,
   CInputRadio,
+  CInputGroup,
+  CInputGroupAppend,
+  CInputGroupPrepend,
+  CDropdown,
+  CInputGroupText,
   CLabel,
+  CSelect,
   CRow,
+  CSwitch
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
-const CLIENT_ID = uuidv4();
-const TRANSACTION_ID = uuidv4();
 
-
-// create initial state
-const initialState = {
-  source_id: '',
-  source_name: '',
-  source_phone: '',
-  source_address: '',
-  beneficiary_id: '',
-  beneficiary_name: '',
-  beneficiary_address: '',
-  currency: '',
-  amount: '',
-  date: '',
-  purpose_of_transfer: '',
-  branch_name: '',
-  customer_verified_by: '',
-  register_number: '',
-  approval: '',
-  checked_by: '',
-  uploaded_by: '',
-  teller_name: '',
-  transactions: [],
-  accounts: []
-}
-
-// create reducer to update state
-function reducer (state, action) {  
-  switch(action.type) {
-    case "SET_TRANSACTIONS":
-      return { ...state, transactions: action.transactions }
-    case "SET_ACCOUNTS":
-      return { ...state, accounts: action.accounts }
-    case "SET_INPUT":
-      return {...state, [action.key]: action.value };
-    case "CLEAR_INPUT":
-      return { ...initialState, transactions: state.transactions };
-    case "ADD_TRANSACTION":
-      return { ...state, transactions: [...state.transactions, action.transaction]};
-    default:
-      return state;
-  }
-}
-
-
-const PaymentInstructionForm = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  useEffect(() => {
-    getData()
-    const subscription = API.graphql(graphqlOperation(OnCreateTransaction)).subscribe({
-      next: (eventData) => {
-        const transaction = eventData.value.data.onCreateTransaction;
-        if (transaction.id === CLIENT_ID) return
-        dispatch({ type: "ADD_TRANSACTION", transaction});
-      }
-    })
-    return () => subscription.unsubscribe();
-  }, []);
-
-  // get the data of accounts
-  async function getData() {
-    try {
-      const accountData = await API.graphql(graphqlOperation(ListAccount));
-      console.log("data from API: ", accountData);
-      dispatch({ type: 'SET_ACCOUNTS', accounts: accountData.data.listAccounts.items});
-    } catch (err) {
-      console.log("error fetching data...", err);
-    }
-  }
-  
-  async function createTransaction() {
-    const {  source_id, beneficiary_id, currency, amount, date, purpose_of_transfer, branch_name, customer_verified_by, register_number, approval, checked_by, uploaded_by, teller_name } = state;
-
-    if (source_id === '' || beneficiary_id === '' || currency === '' || amount === '' || date === '' || purpose_of_transfer === '' || branch_name === '' || customer_verified_by === '' || register_number === '' || approval === '' || checked_by === '' || uploaded_by === '' || teller_name  ) return 
-    const transaction = { id: CLIENT_ID, type: "Within Bank", swift_code: "None", beneficiary_bank: "JTrust", source_id, beneficiary_id, currency, amount, date, purpose_of_transfer, branch_name, customer_verified_by, register_number, approval, checked_by, uploaded_by, teller_name}
-    const transactions = [ ...state.transactions, transaction ];
-    dispatch({ type: "SET_TRANSACTIONS", transactions });
-    dispatch({ type: "CLEAR_INPUT" });
-    console.log("in createTransaction function:", transactions);
-
-    try {
-      await API.graphql(graphqlOperation(CreateTransaction, { input: transaction}));
-      console.log("item created! Transactions", transactions);
-      console.log("item created! Transaction", transaction);
-    } catch (err) {
-      console.log("error creating transaction...", err);
-    }
-  }
-
-  // change state then user types into input
-  function onChange(e) {
-    dispatch({ type: "SET_INPUT", key: e.target.name, value: e.target.value });
-  }
-
+const BasicForms = () => {
+  const [collapsed, setCollapsed] = React.useState(true)
+  const [showElements, setShowElements] = React.useState(true)
 
   return (
     <>
@@ -131,129 +45,260 @@ const PaymentInstructionForm = () => {
       <CCol>
           <CCard>
             <CCardHeader>
-              <h3>Payment Instruction Form</h3>
+              Basic Form
+              <small> Elements</small>
             </CCardHeader>
             <CCardBody>
               <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
-                <h4>APPLICANT DETAILS:</h4>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="source_id">Source ID</CLabel>
+                    <CLabel>Static</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.source_id} type="number" id="source_id" name="source_id" placeholder="ID" />
+                    <p className="form-control-static">Username</p>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="source_name">Source Name</CLabel>
+                    <CLabel htmlFor="text-input">Text Input</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.source_name} type="text" id="source_name" name="source_name" placeholder="Name" />
+                    <CInput id="text-input" name="text-input" placeholder="Text" />
+                    <CFormText>This is a help text</CFormText>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="source_phone">Source Phone Number</CLabel>
+                    <CLabel htmlFor="email-input">Email Input</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.source_phone} type="tel" id="source_phone" name="source_phone" placeholder="Phone Number" />
+                    <CInput type="email" id="email-input" name="email-input" placeholder="Enter Email" autoComplete="email"/>
+                    <CFormText className="help-block">Please enter your email</CFormText>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="source_address">Source Address</CLabel>
+                    <CLabel htmlFor="password-input">Password</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.source_address} type="tel" id="source_address" name="source_address" placeholder="Address" />
-                  </CCol>
-                </CFormGroup>
-                <h4>BENEFICIARY DETAIL:</h4>
-                <CFormGroup row>
-                  <CCol md="3">
-                    <CLabel htmlFor="beneficiary_id">Beneficiary ID</CLabel>
-                  </CCol>
-                  <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.beneficiary_id} type="number" id="beneficiary_id" name="beneficiary_id" placeholder="ID" />
+                    <CInput type="password" id="password-input" name="password-input" placeholder="Password" autoComplete="new-password" />
+                    <CFormText className="help-block">Please enter a complex password</CFormText>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="beneficiary_name">Beneficiary Name</CLabel>
+                    <CLabel htmlFor="date-input">Date Input</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.beneficiary_name} type="text" id="beneficiary_name" name="beneficiary_name" placeholder="Name" />
+                    <CInput type="date" id="date-input" name="date-input" placeholder="date" />
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="beneficiary_address">Beneficiary Address</CLabel>
+                    <CLabel htmlFor="disabled-input">Disabled Input</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.beneficiary_address} type="text" id="beneficiary_address" name="beneficiary_address" placeholder="Name" />
-                  </CCol>
-                </CFormGroup>
-                <h4>CURRENCY AND AMOUNT OF TRANSFER:</h4>
-                <CFormGroup row>
-                  <CCol md="3">
-                    <CLabel htmlFor="currency">Currency</CLabel>
-                  </CCol>
-                  <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.currency} type="text" id="currency" name="currency" placeholder="Currency" />
+                    <CInput id="disabled-input" name="disabled-input" placeholder="Disabled" disabled />
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="amount">Amount</CLabel>
+                    <CLabel htmlFor="textarea-input">Textarea</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.amount} type="number" id="amount" name="amount" placeholder="Amount" />
+                    <CTextarea 
+                      name="textarea-input" 
+                      id="textarea-input" 
+                      rows="9"
+                      placeholder="Content..." 
+                    />
                   </CCol>
                 </CFormGroup>
-                <h4>PURPOSE OF TRANSFER</h4>
                 <CFormGroup row>
-                  <CCol md="3"><CLabel>Purpose of Transfer</CLabel></CCol>
+                  <CCol md="3">
+                    <CLabel htmlFor="select">Select</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CSelect custom name="select" id="select">
+                      <option value="0">Please select</option>
+                      <option value="1">Option #1</option>
+                      <option value="2">Option #2</option>
+                      <option value="3">Option #3</option>
+                    </CSelect>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="selectLg">Select Large</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9" size="lg">
+                    <CSelect custom size="lg" name="selectLg" id="selectLg">
+                      <option value="0">Please select</option>
+                      <option value="1">Option #1</option>
+                      <option value="2">Option #2</option>
+                      <option value="3">Option #3</option>
+                    </CSelect>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="selectSm">Select Small</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CSelect custom size="sm" name="selectSm" id="SelectLm">
+                      <option value="0">Please select</option>
+                      <option value="1">Option #1</option>
+                      <option value="2">Option #2</option>
+                      <option value="3">Option #3</option>
+                      <option value="4">Option #4</option>
+                      <option value="5">Option #5</option>
+                    </CSelect>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="disabledSelect">Disabled Select</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CSelect 
+                      custom 
+                      name="disabledSelect" 
+                      id="disabledSelect" 
+                      disabled 
+                      autoComplete="name"
+                    >
+                      <option value="0">Please select</option>
+                      <option value="1">Option #1</option>
+                      <option value="2">Option #2</option>
+                      <option value="3">Option #3</option>
+                    </CSelect>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol tag="label" sm="3" className="col-form-label">
+                    Switch checkboxes
+                  </CCol>
+                  <CCol sm="9">
+                    <CSwitch
+                      className="mr-1"
+                      color="primary"
+                      defaultChecked
+                    />
+                    <CSwitch
+                      className="mr-1"
+                      color="success"
+                      defaultChecked
+                      variant="outline"
+                    />
+                    <CSwitch
+                      className="mr-1"
+                      color="warning"
+                      defaultChecked
+                      variant="opposite"
+                    />
+                    <CSwitch
+                      className="mr-1"
+                      color="danger"
+                      defaultChecked
+                      shape="pill"
+                    />
+                    <CSwitch
+                      className="mr-1"
+                      color="info"
+                      defaultChecked
+                      shape="pill"
+                      variant="outline"
+                    />
+                    <CSwitch
+                      className="mr-1"
+                      color="dark"
+                      defaultChecked
+                      shape="pill"
+                      variant="opposite"
+                    />
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Radios</CLabel>
+                  </CCol>
+                  <CCol md="9">
+                    <CFormGroup variant="checkbox">
+                      <CInputRadio className="form-check-input" id="radio1" name="radios" value="option1" />
+                      <CLabel variant="checkbox" htmlFor="radio1">Option 1</CLabel>
+                    </CFormGroup>
+                    <CFormGroup variant="checkbox">
+                      <CInputRadio className="form-check-input" id="radio2" name="radios" value="option2" />
+                      <CLabel variant="checkbox" htmlFor="radio2">Option 2</CLabel>
+                    </CFormGroup>
+                    <CFormGroup variant="checkbox">
+                      <CInputRadio className="form-check-input" id="radio3" name="radios" value="option3" />
+                      <CLabel variant="checkbox" htmlFor="radio3">Option 3</CLabel>
+                    </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Inline Radios</CLabel>
+                  </CCol>
+                  <CCol md="9">
+                    <CFormGroup variant="custom-radio" inline>
+                      <CInputRadio custom id="inline-radio1" name="inline-radios" value="option1" />
+                      <CLabel variant="custom-checkbox" htmlFor="inline-radio1">One</CLabel>
+                    </CFormGroup>
+                    <CFormGroup variant="custom-radio" inline>
+                      <CInputRadio custom id="inline-radio2" name="inline-radios" value="option2" />
+                      <CLabel variant="custom-checkbox" htmlFor="inline-radio2">Two</CLabel>
+                    </CFormGroup>
+                    <CFormGroup variant="custom-radio" inline>
+                      <CInputRadio custom id="inline-radio3" name="inline-radios" value="option3" />
+                      <CLabel variant="custom-checkbox" htmlFor="inline-radio3">Three</CLabel>
+                    </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3"><CLabel>Checkboxes</CLabel></CCol>
                   <CCol md="9">
                     <CFormGroup variant="checkbox" className="checkbox">
-                      <CInputCheckbox id="purpose-relative" name="purpose-relative" value="send-to-relative" />
-                      <CLabel variant="checkbox" className="form-check-label" htmlFor="purpose-relative">Send to Relative</CLabel>
+                      <CInputCheckbox 
+                        id="checkbox1" 
+                        name="checkbox1" 
+                        value="option1" 
+                      />
+                      <CLabel variant="checkbox" className="form-check-label" htmlFor="checkbox1">Option 1</CLabel>
                     </CFormGroup>
                     <CFormGroup variant="checkbox" className="checkbox">
-                      <CInputCheckbox id="purpose-loan" name="purpose-loan" value="loan-payment" />
-                      <CLabel variant="checkbox" className="form-check-label" htmlFor="purpose-loan">Loan Payment</CLabel>
+                      <CInputCheckbox id="checkbox2" name="checkbox2" value="option2" />
+                      <CLabel variant="checkbox" className="form-check-label" htmlFor="checkbox2">Option 2</CLabel>
                     </CFormGroup>
                     <CFormGroup variant="checkbox" className="checkbox">
-                      <CInputCheckbox id="purpose-property" name="purpose-property" value="for-property" />
-                      <CLabel variant="checkbox" className="form-check-label" htmlFor="purpose-property">For Property</CLabel>
-                    </CFormGroup>
-                    <CFormGroup variant="checkbox" className="checkbox">
-                      <CInputCheckbox id="purpose-others" name="purpose-others" value="for-others" />
-                      <CLabel variant="checkbox" className="form-check-label" htmlFor="purpose-others">Others</CLabel>
+                      <CInputCheckbox id="checkbox3" name="checkbox3" value="option3" />
+                      <CLabel variant="checkbox" className="form-check-label" htmlFor="checkbox3">Option 3</CLabel>
                     </CFormGroup>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel htmlFor="branch_name">Branch Name</CLabel>
+                    <CLabel>Inline Checkboxes</CLabel>
                   </CCol>
-                  <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value="" type="text" id="branch_name" name="branch_name" placeholder="Branch Name" />
-                  </CCol>
-                </CFormGroup>
-                <CFormGroup row>
-                  <CCol md="3">
-                    <CLabel htmlFor="approval">Approval</CLabel>
-                  </CCol>
-                  <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value="" type="text" id="approval" name="approval" placeholder="Approval" />
-                  </CCol>
-                </CFormGroup>
-                <CFormGroup row>
-                  <CCol md="3">
-                    <CLabel htmlFor="date">Date</CLabel>
-                  </CCol>
-                  <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value="" type="date" id="date" name="date" placeholder="date" />
+                  <CCol md="9">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      <CInputCheckbox 
+                        custom 
+                        id="inline-checkbox1" 
+                        name="inline-checkbox1" 
+                        value="option1" 
+                      />
+                      <CLabel variant="custom-checkbox" htmlFor="inline-checkbox1">One</CLabel>
+                    </CFormGroup>
+                    <CFormGroup variant="custom-checkbox" inline>
+                      <CInputCheckbox custom id="inline-checkbox2" name="inline-checkbox2" value="option2" />
+                      <CLabel variant="custom-checkbox" htmlFor="inline-checkbox2">Two</CLabel>
+                    </CFormGroup>
+                    <CFormGroup variant="custom-checkbox" inline>
+                      <CInputCheckbox custom id="inline-checkbox3" name="inline-checkbox3" value="option3" />
+                      <CLabel variant="custom-checkbox" htmlFor="inline-checkbox3">Three</CLabel>
+                    </CFormGroup>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -262,11 +307,57 @@ const PaymentInstructionForm = () => {
                     <CInputFile id="file-input" name="file-input"/>
                   </CCol>
                 </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Multiple File input</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInputFile 
+                      id="file-multiple-input" 
+                      name="file-multiple-input" 
+                      multiple
+                      custom
+                    />
+                    <CLabel htmlFor="file-multiple-input" variant="custom-file">
+                      Choose Files...
+                    </CLabel>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CLabel col md={3}>Custom file input</CLabel>
+                  <CCol xs="12" md="9">
+                    <CInputFile custom id="custom-file-input"/>
+                    <CLabel htmlFor="custom-file-input" variant="custom-file">
+                      Choose file...
+                    </CLabel>
+                  </CCol>
+                </CFormGroup>
               </CForm>
             </CCardBody>
             <CCardFooter>
-              <CButton onClick={ createTransaction } type="submit" size="sm" color="primary"><CIcon name="cil-scrubber" /> Submit</CButton>
+              <CButton type="submit" size="sm" color="primary"><CIcon name="cil-scrubber" /> Submit</CButton>
               <CButton type="reset" size="sm" color="danger"><CIcon name="cil-ban" /> Reset</CButton>
+            </CCardFooter>
+          </CCard>
+          <CCard>
+            <CCardHeader>
+              Inline
+              <small> Form</small>
+            </CCardHeader>
+            <CCardBody>
+              <CForm action="" method="post" inline>
+                <CFormGroup className="pr-1">
+                  <CLabel htmlFor="exampleInputName2" className="pr-1">Name</CLabel>
+                  <CInput id="exampleInputName2" placeholder="Jane Doe" required />
+                </CFormGroup>
+                <CFormGroup className="pr-1">
+                  <CLabel htmlFor="exampleInputEmail2" className="pr-1">Email</CLabel>
+                  <CInput type="email" id="exampleInputEmail2" placeholder="jane.doe@example.com" required />
+                </CFormGroup>
+              </CForm>
+            </CCardBody>
+            <CCardFooter>
+              <CButton type="submit" size="sm" color="primary"><CIcon name="cil-scrubber" /> Submit</CButton>
             </CCardFooter>
           </CCard>
         </CCol>
@@ -275,4 +366,4 @@ const PaymentInstructionForm = () => {
   );
 };
 
-export default PaymentInstructionForm;
+export default BasicForms
