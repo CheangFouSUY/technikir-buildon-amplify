@@ -45,17 +45,17 @@ const Typography = React.lazy(() => import('./views/theme/typography/Typography'
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'));
 const Users = React.lazy(() => import('./views/users/Users'));
 const User = React.lazy(() => import('./views/users/User'));
-const Transaction = React.lazy(()=> import('./views/Transaction'))
+const Transaction = React.lazy(()=> import('./views/Transaction'));
 
 
 
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', component: Authorizer, exact: true },
-  { path: '/theme', name: 'Theme', component: Colors, exact: true },
-  { path: '/theme/colors', name: 'Colors', component: Colors },
-  { path: '/theme/typography  ', name: 'Typography', component: Transaction },
+  { path: '/dashboard', name: 'Dashboard', component: Authorizer },
+  { path: '/theme', name: 'Theme', component: Transaction, exact: true },
+  { path: '/theme/colors', name: 'Colors', component: Transaction },
+  { path: '/transaction  ', name: 'Typography', component: Transaction },
   { path: '/base', name: 'Base', component: Cards, exact: true },
   { path: '/base/breadcrumbs', name: 'Breadcrumbs', component: Breadcrumbs },
   { path: '/base/cards', name: 'Cards', component: Cards },
