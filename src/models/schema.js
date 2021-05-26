@@ -211,6 +211,27 @@ export const schema = {
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
+                },
+                "beneficiary_firstname": {
+                    "name": "beneficiary_firstname",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "beneficiary_lastname": {
+                    "name": "beneficiary_lastname",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "beneficiary_address": {
+                    "name": "beneficiary_address",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -252,5 +273,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "e68b93c264558a9ccdc314a14fc40f8f"
+    "version": "698c16b7dc78f9c5735a338d96cb64b9"
 };

@@ -27,5 +27,8 @@ type Transaction @model @auth(rules: [{allow: private, operations: [read]}, {all
   source_id: Int!
   beneficiary_id: Int!
   progress: String!
+  beneficiary_firstname: String
+  beneficiary_lastname: String
+  beneficiary_address: String
 }
  

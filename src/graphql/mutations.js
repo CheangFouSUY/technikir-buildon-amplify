@@ -14,9 +14,6 @@ export const createAccount = /* GraphQL */ `
       balance
       address
       phone_number
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -35,9 +32,6 @@ export const updateAccount = /* GraphQL */ `
       balance
       address
       phone_number
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -56,9 +50,6 @@ export const deleteAccount = /* GraphQL */ `
       balance
       address
       phone_number
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -88,9 +79,6 @@ export const createTransaction = /* GraphQL */ `
       source_id
       beneficiary_id
       progress
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -120,9 +108,6 @@ export const updateTransaction = /* GraphQL */ `
       source_id
       beneficiary_id
       progress
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -152,9 +137,6 @@ export const deleteTransaction = /* GraphQL */ `
       source_id
       beneficiary_id
       progress
-      _version
-      _deleted
-      _lastChangedAt
       createdAt
       updatedAt
     }

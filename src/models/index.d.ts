@@ -35,6 +35,9 @@ export declare class Transaction {
   readonly source_id: number;
   readonly beneficiary_id: number;
   readonly progress: string;
+  readonly beneficiary_firstname?: string;
+  readonly beneficiary_lastname?: string;
+  readonly beneficiary_address?: string;
   constructor(init: ModelInit<Transaction>);
   static copyOf(source: Transaction, mutator: (draft: MutableModel<Transaction>) => MutableModel<Transaction> | void): Transaction;
 }
