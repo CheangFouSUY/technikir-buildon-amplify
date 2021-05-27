@@ -1,5 +1,6 @@
 import { useState, useReducer, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
+import QRCode from 'qrcode.react';
 import {listAccounts as ListAccounts } from '../graphql/queries';
 import { updateTransaction as UpdateTransaction, deleteTransaction as DeleteTransaction } from '../graphql/mutations';
 import {
@@ -12,10 +13,9 @@ import {
   CForm,
   CFormGroup,
   CInput,
-  CInputFile,
-  CInputCheckbox,
   CLabel,
   CRow,
+  CContainer,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
@@ -68,13 +68,18 @@ function reducer (state, action) {
 const WithinForm = (props) => {
     const transactionDetail = props.location.state || {};
     const [state, dispatch] = useReducer(reducer, initialState);
-    let beneficiary_bank_type = "display: none !important";
-    let swift_code_type = "display: none !important";
-    if ( transactionDetail.type === "Cross Country" ){
-        beneficiary_bank_type = "";
-        swift_code_type = "";
-    }else if (transactionDetail.type === "Cross Bank")
-        beneficiary_bank_type = "";
+    let qrvalue = "";
+    let qr_display = "d-none";
+    let btn_display = "d-none";
+    let heading_color = "danger";
+    if ( transactionDetail.progress === "Authorized" ) {
+        qr_display = "";
+        heading_color = "success";
+    } else if ( transactionDetail.progress === "Pending" ) {
+        btn_display = "";
+        heading_color = "warning";
+    }
+    if ( transactionDetail.id !== undefined ) qrvalue = transactionDetail.id; 
 
     useEffect(() => {
         getData();
@@ -108,15 +113,16 @@ const WithinForm = (props) => {
         }
     }
     
-
     return (
         <>
         <CRow>
-        {console.log(transactionDetail)}
-        <CCol>
+            <CCol>
             <CCard>
-                <CCardHeader>
-                <h3>Payment Instruction {transactionDetail.type} Form</h3>
+                <CCardHeader >
+                    <div class={`d-flex justify-content-between `} >
+                        <h3 class="align-self-center md-3" >Payment Instruction {transactionDetail.type} Form</h3>
+                        <QRCode class={`align-self-center ${qr_display}`} md-3 value={qrvalue}></QRCode>
+                    </div>
                 </CCardHeader>
                 <CCardBody>
                 <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
@@ -194,34 +200,22 @@ const WithinForm = (props) => {
                         <CInput value={transactionDetail.beneficiary_address} type="text" id="beneficiary_address" name="beneficiary_address" placeholder="Address" disabled/>
                     </CCol>
                     </CFormGroup>
-                    {console.log("transaction detail",transactionDetail)}
-                    {() => {
-                        if (transactionDetail.type == "Cross Bank" || transactionDetail.type == "Cross Country"){
-                            return(
-                                <CFormGroup row>
-                                <CCol md="3" >
-                                    <CLabel htmlFor="beneficiary_bank">Beneficiary Bank</CLabel>
-                                </CCol>
-                                <CCol xs="12" md="9">
-                                    <CInput value={transactionDetail.beneficiary_bank} type="text" id="beneficiary_bank" name="beneficiary_bank" placeholder="Beneficiary Bank" disabled/>
-                                </CCol>
-                                </CFormGroup>
-
-                            );
-                        }
-                    }}
-                    {() => {
-                        if (transactionDetail.type == "Cross Country"){
-                            <CFormGroup row>
-                            <CCol md="3" >
-                                <CLabel htmlFor="swift_code">SWIFT Code</CLabel>
-                            </CCol>
-                            <CCol xs="12" md="9">
-                                <CInput value={transactionDetail.swift_code} type="text" id="swift_code" name="swift_code" placeholder="Swift Code" disabled/>
-                            </CCol>
-                            </CFormGroup>
-                        }
-                    }}
+                    <CFormGroup row>
+                    <CCol md="3" >
+                        <CLabel htmlFor="beneficiary_bank">Beneficiary Bank</CLabel>
+                    </CCol>
+                    <CCol xs="12" md="9">
+                        <CInput value={transactionDetail.beneficiary_bank} type="text" id="beneficiary_bank" name="beneficiary_bank" placeholder="Beneficiary Bank" disabled/>
+                    </CCol>
+                    </CFormGroup>
+                    <CFormGroup row>
+                    <CCol md="3" >
+                        <CLabel htmlFor="swift_code">SWIFT Code</CLabel>
+                    </CCol>
+                    <CCol xs="12" md="9">
+                        <CInput value={transactionDetail.swift_code} type="text" id="swift_code" name="swift_code" placeholder="Swift Code" disabled/>
+                    </CCol>
+                    </CFormGroup>
                     <h4>CURRENCY AND AMOUNT OF TRANSFER:</h4>
                     <CFormGroup row>
                     <CCol md="3">
@@ -316,20 +310,10 @@ const WithinForm = (props) => {
                 </CForm>
                 </CCardBody>
                 <CCardFooter>
-                    <CButton  onClick={handleAuthorize} name="authorize" type="submit" md="9" size="sm" color="primary"><CIcon name="cil-scrubber" /> Authorize </CButton>
-                    <CButton onClick={handleAuthorize} name="reject" type="submit" md="9" size="sm" color="danger"><CIcon name="cil-scrubber" /> Reject </CButton>
-                {/* {() => {
-                    console.log("progress:",transactionDetail.progress)
-                    if (transactionDetail.progress == "Pending") {
-                        <CButton  onClick={handleAuthorize} name="authorize" type="submit" md="9" size="sm" color="primary"><CIcon name="cil-scrubber" /> Authorize </CButton>
-                    }else {
-                        <CButton name="authorize" type="submit" md="9" size="sm" color="primary"><CIcon name="cil-scrubber" /> Print </CButton>
-                    }
-                }}
-                {() => {
-                    if (transactionDetail.progress == "Pending") 
-                        <CButton onClick={handleAuthorize} name="reject" type="submit" md="9" size="sm" color="danger"><CIcon name="cil-scrubber" /> Reject </CButton>
-                }} */}
+                    <div class={btn_display} >
+                        <CButton  onClick={handleAuthorize} name="authorize" type="submit" md="9" size="lg" color="success"> Authorize </CButton>
+                        <CButton onClick={handleAuthorize} name="reject" type="submit"  md="9" size="lg" color="danger"> Reject </CButton>
+                    </div>
                 </CCardFooter>    
             </CCard>
             </CCol>

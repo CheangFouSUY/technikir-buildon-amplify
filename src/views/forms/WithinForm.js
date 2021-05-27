@@ -122,7 +122,7 @@ const WithinForm = () => {
     }
 
     if (source_id === '' || beneficiary_id === '' || currency === '' || amount === '' || date === '' || branch_name === '' || register_number === '' || approval === '' || checked_by === '' || uploaded_by === '' || teller_name === '' ) return 
-    const transaction = { id: CLIENT_ID, type: "Within Bank", swift_code: "None", beneficiary_bank: "JTrust", progress: "Pending", purpose_of_transfer: "Others", customer_verified_by: "Others", source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name, beneficiary_firstname, beneficiary_lastname, beneficiary_address}
+    const transaction = { id: CLIENT_ID, type: "Within Bank", swift_code: "None", beneficiary_bank: "J Trust Royal Bank", progress: "Pending", purpose_of_transfer: "Others", customer_verified_by: "Others", source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name, beneficiary_firstname, beneficiary_lastname, beneficiary_address}
     const transactions = [ ...state.transactions, transaction ];
     dispatch({ type: "SET_TRANSACTIONS", transactions });
     dispatch({ type: "CLEAR_INPUT" });
