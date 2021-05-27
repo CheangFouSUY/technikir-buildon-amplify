@@ -75,6 +75,7 @@ function reducer (state, action) {
 
 const WithinForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  
 
   // component did mount
   useEffect(() => {
@@ -336,7 +337,7 @@ const WithinForm = () => {
             </CCardBody>
             <CCardFooter>
               <CButton onClick={ createTransaction} type="submit" size="sm" color="primary"><CIcon name="cil-scrubber" /> Submit</CButton>
-              <CButton onClick={ () => this.testing() } type="reset" size="sm" color="danger"><CIcon name="cil-ban" /> Reset</CButton>
+              <CButton onClick={ () => this.setState({approval: 'slfkj'}) } type="reset" size="sm" color="danger"><CIcon name="cil-ban" /> Reset</CButton>
             </CCardFooter>
           </CCard>
         </CCol>
