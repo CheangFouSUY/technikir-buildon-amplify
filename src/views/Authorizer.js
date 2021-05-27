@@ -29,6 +29,7 @@ const fields = ['register_number','date', 'type', 'progress', { key: 'show_detai
 
 // create initial state
 const initialState = {
+    id: '',
     source_id: '',
     beneficiary_id: '',
     beneficiary_firstname: '',
@@ -45,6 +46,8 @@ const initialState = {
     checked_by: '',
     uploaded_by: '',
     teller_name: '',
+    _deleted: '',
+    _version: '',
     transactions: [],
     pending: [],
     authorized: [],
@@ -76,11 +79,11 @@ const Authorizer = () => {
     }, []);
     
     function divideProgress(e){
-        if (e.progress === "Pending" && state.pending.findIndex((event) => event.register_number === e.register_number) === -1) 
-        dispatch({ type: "ADD_PENDING", pending: e})
-        else if (e.progress === "Authorized" && state.authorized.findIndex((event) => event.register_number === e.register_number) === -1)
+        if ( !e._deleted && e.progress === "Pending" && state.pending.findIndex((event) => event.register_number === e.register_number) === -1) 
+            dispatch({ type: "ADD_PENDING", pending: e})
+        else if ( !e._deleted && e.progress === "Authorized" && state.authorized.findIndex((event) => event.register_number === e.register_number) === -1)
             dispatch({ type: "ADD_AUTHORIZED", authorized: e})
-            else if (e.progress === "Rejected" && state.rejected.findIndex((event) => event.register_number === e.register_number) === -1)
+        else if ( !e._deleted && e.progress === "Rejected" && state.rejected.findIndex((event) => event.register_number === e.register_number) === -1)
             dispatch({ type: "ADD_REJECTED", rejected: e})
     }
     

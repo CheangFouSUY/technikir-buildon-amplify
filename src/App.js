@@ -20,6 +20,7 @@ class App extends Component {
 
       
       <HashRouter>
+          <AmplifySignOut />
           <React.Suspense fallback={loading}>
             <Switch>
               <Route path="/" name="Home" render={props => <TheLayout {...props}/>} />

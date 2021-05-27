@@ -1,6 +1,7 @@
 import { useState, useReducer, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import {listAccounts as ListAccounts } from '../graphql/queries';
+import { updateTransaction as UpdateTransaction, deleteTransaction as DeleteTransaction } from '../graphql/mutations';
 import {
   CButton,
   CCard,
@@ -20,27 +21,29 @@ import CIcon from '@coreui/icons-react'
 
 // create initial state
 const initialState = {
-  source_id: '',
-  source_firstname: '',
-  source_lastname: '',
-  source_phone: '',
-  source_address: '',
-  beneficiary_id: '',
-  beneficiary_firstname: '',
-  beneficiary_lastname: '',
-  beneficiary_address: '',
-  currency: '',
-  amount: '',
-  date: '',
-  purpose_of_transfer: '',
-  branch_name: '',
-  customer_verified_by: '',
-  register_number: '',
-  approval: '',
-  checked_by: '',
-  uploaded_by: '',
-  teller_name: '',
-  accounts: []
+    id: '',
+    source_id: '',
+    source_firstname: '',
+    source_lastname: '',
+    source_phone: '',
+    source_address: '',
+    beneficiary_id: '',
+    beneficiary_firstname: '',
+    beneficiary_lastname: '',
+    beneficiary_address: '',
+    currency: '',
+    amount: '',
+    date: '',
+    purpose_of_transfer: '',
+    branch_name: '',
+    customer_verified_by: '',
+    register_number: '',
+    approval: '',
+    checked_by: '',
+    uploaded_by: '',
+    teller_name: '',
+    _version: '',
+    accounts: []
 }
 
 
@@ -90,6 +93,21 @@ const WithinForm = (props) => {
     function checkID(id) {
         return state.accounts.findIndex(e => e.acc_num == id);
     }
+ 
+    async function handleAuthorize(e) {
+        const { id, progress, _version } = transactionDetail;
+        const transaction = { id, progress, _version };
+        if (e.target.name === "authorize") transaction.progress = "Authorized";
+        else if (e.target.name === "reject") transaction.progress = "Rejected";
+
+        try {
+            await API.graphql(graphqlOperation(DeleteTransaction, { input: { id: transaction.id, _version: transaction._version }}));
+            console.log("item deleted! Transaction", transaction);
+        } catch (err) {
+            console.log("error updating transaction...", err);
+        }
+    }
+    
 
     return (
         <>
@@ -294,8 +312,8 @@ const WithinForm = (props) => {
                 </CForm>
                 </CCardBody>
                 <CCardFooter>
-                <CButton type="submit" md="9" size="sm" color="primary"><CIcon name="cil-scrubber" /> Authorize </CButton>
-                <CButton type="submit" md="9" size="sm" color="primary"><CIcon name="cil-scrubber" /> Reject </CButton>
+                <CButton  onClick={handleAuthorize} name="authorize" type="submit" md="9" size="sm" color="primary"><CIcon name="cil-scrubber" /> Authorize </CButton>
+                <CButton onClick={handleAuthorize} name="reject" type="submit" md="9" size="sm" color="primary"><CIcon name="cil-scrubber" /> Reject </CButton>
                 </CCardFooter>
             </CCard>
             </CCol>

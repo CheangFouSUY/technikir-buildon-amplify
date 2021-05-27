@@ -105,10 +105,10 @@ const WithinForm = () => {
     }
   }
   async function createTransaction() {
-    const {  source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name } = state;
+    const {  source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name,  beneficiary_firstname, beneficiary_lastname, beneficiary_address } = state;
 
     if (source_id === '' || beneficiary_id === '' || currency === '' || amount === '' || date === '' || branch_name === '' || register_number === '' || approval === '' || checked_by === '' || uploaded_by === '' || teller_name === '' ) return 
-    const transaction = { id: CLIENT_ID, type: "Within Bank", swift_code: "None", beneficiary_bank: "JTrust", progress: "Pending", purpose_of_transfer: "Others", customer_verified_by: "Others", source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name}
+    const transaction = { id: CLIENT_ID, type: "Within Bank", swift_code: "None", beneficiary_bank: "JTrust", progress: "Pending", purpose_of_transfer: "Others", customer_verified_by: "Others", source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name, beneficiary_firstname, beneficiary_lastname, beneficiary_address}
     const transactions = [ ...state.transactions, transaction ];
     dispatch({ type: "SET_TRANSACTIONS", transactions });
     dispatch({ type: "CLEAR_INPUT" });
@@ -198,7 +198,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="beneficiary_firstname">Beneficiary First Name</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput value={checkID(state.beneficiary_id) === -1 ? "" : state.accounts[checkID(state.beneficiary_id)].first_name} type="text" id="beneficiary_firstname" name="beneficiary_firstname" placeholder="First Name" disabled/>
+                    <CInput onChange={onChange} value={checkID(state.beneficiary_id) === -1 ? "" : state.accounts[checkID(state.beneficiary_id)].first_name} type="text" id="beneficiary_firstname" name="beneficiary_firstname" placeholder="First Name" disabled/>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -206,7 +206,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="beneficiary_lastname">Beneficiary Last Name</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput value={checkID(state.beneficiary_id) === -1 ? "" : state.accounts[checkID(state.beneficiary_id)].last_name} type="text" id="beneficiary_lastname" name="beneficiary_lastname" placeholder="Last Name" disabled/>
+                    <CInput onChange={onChange} value={checkID(state.beneficiary_id) === -1 ? "" : state.accounts[checkID(state.beneficiary_id)].last_name} type="text" id="beneficiary_lastname" name="beneficiary_lastname" placeholder="Last Name" disabled/>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -214,7 +214,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="beneficiary_address">Beneficiary Address</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput value={checkID(state.beneficiary_id) === -1 ? "" : state.accounts[checkID(state.beneficiary_id)].address} type="text" id="beneficiary_address" name="beneficiary_address" placeholder="Address" disabled/>
+                    <CInput onchange={onChange} value={checkID(state.beneficiary_id) === -1 ? "" : state.accounts[checkID(state.beneficiary_id)].address} type="text" id="beneficiary_address" name="beneficiary_address" placeholder="Address" disabled/>
                   </CCol>
                 </CFormGroup>
                 <h4>CURRENCY AND AMOUNT OF TRANSFER:</h4>
