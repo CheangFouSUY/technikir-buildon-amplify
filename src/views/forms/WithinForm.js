@@ -75,6 +75,30 @@ function reducer (state, action) {
 
 const WithinForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [test, setTest] = useState({
+    source_id: '',
+    source_firstname: '',
+    source_lastname: '',
+    source_phone: '',
+    source_address: '',
+    beneficiary_id: '',
+    beneficiary_firstname: '',
+    beneficiary_lastname: '',
+    beneficiary_address: '',
+    currency: '',
+    amount: '',
+    date: '',
+    purpose_of_transfer: '',
+    branch_name: '',
+    customer_verified_by: '',
+    register_number: '',
+    approval: '',
+    checked_by: '',
+    uploaded_by: '',
+    teller_name: '',
+    transactions: [],
+    accounts: []
+  });
 
   // component did mount
   useEffect(() => {
@@ -90,7 +114,7 @@ const WithinForm = () => {
   }, []);
 
 
-  async function testing(){
+  function testing(){
     this.setState({approval: 'laskdjakl'})
   }
 
@@ -148,7 +172,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="source_id">Source ID</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.source_id} type="number" id="source_id" name="source_id" placeholder="ID" />
+                    <CInput onChange={onChange} value={test.source_id} type="number" id="source_id" name="source_id" placeholder="ID" />
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -302,7 +326,7 @@ const WithinForm = () => {
                     <CLabel htmlFor="checked_by">Checked By</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput onChange={onChange} value={state.checked_by} type="text" id="checked_by" name="checked_by" placeholder="Checked By" />
+                    <CInput onChange={onChange} value={test.checked_by} type="text" id="checked_by" name="checked_by" placeholder="Checked By" />
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -336,7 +360,7 @@ const WithinForm = () => {
             </CCardBody>
             <CCardFooter>
               <CButton onClick={ createTransaction} type="submit" size="sm" color="primary"><CIcon name="cil-scrubber" /> Submit</CButton>
-              <CButton onClick={ () => this.testing() } type="reset" size="sm" color="danger"><CIcon name="cil-ban" /> Reset</CButton>
+              <CButton onClick={ () => setTest({source_id: 1001, checked_by: 'slkfslkfj'}) } type="reset" size="sm" color="danger"><CIcon name="cil-ban" /> Reset</CButton>
             </CCardFooter>
           </CCard>
         </CCol>
