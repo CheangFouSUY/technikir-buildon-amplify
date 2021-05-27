@@ -128,11 +128,25 @@ const WithinForm = () => {
       console.log("error fetching data...", err);
     }
   }
+
+  function initBeneficiaryInfo() {
+  }
+  
   async function createTransaction() {
+    initBeneficiaryInfo();
     const {  source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name } = state;
+    const indexBeneficiary = checkID(beneficiary_id);
+    let beneficiary_firstname = ''; 
+    let beneficiary_lastname = ''; 
+    let beneficiary_address = ''; 
+    if (indexBeneficiary != -1) {
+        beneficiary_firstname = state.accounts[indexBeneficiary].first_name; 
+        beneficiary_lastname = state.accounts[indexBeneficiary].last_name;
+        beneficiary_address = state.accounts[indexBeneficiary].address;
+    }
 
     if (source_id === '' || beneficiary_id === '' || currency === '' || amount === '' || date === '' || branch_name === '' || register_number === '' || approval === '' || checked_by === '' || uploaded_by === '' || teller_name === '' ) return 
-    const transaction = { id: CLIENT_ID, type: "Within Bank", swift_code: "None", beneficiary_bank: "JTrust", progress: "Pending", purpose_of_transfer: "Others", customer_verified_by: "Others", source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name}
+    const transaction = { id: CLIENT_ID, type: "Within Bank", swift_code: "None", beneficiary_bank: "JTrust", progress: "Pending", purpose_of_transfer: "Others", customer_verified_by: "Others", source_id, beneficiary_id, currency, amount, date, branch_name, register_number, approval, checked_by, uploaded_by, teller_name, beneficiary_firstname, beneficiary_lastname, beneficiary_address}
     const transactions = [ ...state.transactions, transaction ];
     dispatch({ type: "SET_TRANSACTIONS", transactions });
     dispatch({ type: "CLEAR_INPUT" });
