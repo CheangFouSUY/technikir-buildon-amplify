@@ -28,7 +28,7 @@ const Flags = React.lazy(() => import('./views/icons/flags/Flags'));
 const Brands = React.lazy(() => import('./views/icons/brands/Brands'));
 
 const Transaction = React.lazy(()=> import('./views/Transaction'));
-const testingForm = React.lazy(()=> import('./views/forms/testingForm'))
+
 
 
 
@@ -37,8 +37,8 @@ const routes = [
   
   { path: '/authorizer', name: 'Authorizer', component: Authorizer , exact: true },
   { path: '/theme', name: 'Theme', component: Transaction, exact: true },
-  { path: '/theme/colors', name: 'Colors', component: Transaction },
-  { path: '/transaction  ', name: 'Transaction', component: Transaction },
+  { path: '/transaction', name: 'Colors', component: Transaction },
+  // { path: '/transaction  ', name: 'Transaction', component: Transaction },
   { path: '/base', name: 'Base', component: Cards, exact: true },
   { path: '/base/breadcrumbs', name: 'Breadcrumbs', component: Breadcrumbs },
   { path: '/base/cards', name: 'Cards', component: Cards },

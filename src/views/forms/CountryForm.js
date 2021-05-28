@@ -20,6 +20,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { useHistory } from 'react-router';
 
 const CLIENT_ID = uuidv4();
 
@@ -73,7 +74,7 @@ function reducer (state, action) {
 
 const WithinForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const history = useHistory();
   useEffect(() => {
     getData()
     const subscription = API.graphql(graphqlOperation(OnCreateTransaction)).subscribe({
@@ -114,6 +115,7 @@ const WithinForm = () => {
     } catch (err) {
       console.log("error creating transaction...", err);
     }
+    history.push('/teller')
   }
 
   // change state then user types into input

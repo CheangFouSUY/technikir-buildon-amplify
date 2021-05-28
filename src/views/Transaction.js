@@ -18,6 +18,7 @@ import {
   CContainer,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { useHistory } from 'react-router-dom';
 
 // create initial state
 const initialState = {
@@ -66,6 +67,7 @@ function reducer (state, action) {
 }  
 
 const WithinForm = (props) => {
+    const history = useHistory();
     const transactionDetail = props.location.state || {};
     const [state, dispatch] = useReducer(reducer, initialState);
     let qrvalue = "";
@@ -111,6 +113,7 @@ const WithinForm = (props) => {
         } catch (err) {
             console.log("error updating transaction...", err);
         }
+        history.push('/authorizer');
     }
     
     return (

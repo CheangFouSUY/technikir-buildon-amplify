@@ -100,7 +100,7 @@ const Authorizer = () => {
 
     const handleClick = (data) => {
         history.push({
-            pathname: '/theme/colors',
+            pathname: '/transaction',
             state: data
         });
     }
